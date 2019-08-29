@@ -1,2 +1,5 @@
-include 'prismPluginMain', 'jps-plugin'
+rootProject.name = 'prismPluginMain'
+
+include 'jps-plugin'
+
 

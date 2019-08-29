@@ -1,7 +1,6 @@
 package org.encryfoundation.prismPlugin.target
 
 import java.util
-
 import org.apache.commons.lang.NotImplementedException
 import org.jetbrains.jps.builders.{BuildTargetLoader, BuildTargetType}
 import org.jetbrains.jps.model.JpsModel

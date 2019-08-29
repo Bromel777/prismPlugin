@@ -22,7 +22,7 @@
         <lang.parserDefinition language="Prism" implementationClass="org.encryfoundation.prismPlugin.PrismParser"/>
         <sdkType implementation="org.encryfoundation.prismPlugin.sdk.PrismSdkType"/>
         <createFromTemplateHandler implementation="org.encryfoundation.prismPlugin.actions.PrismCreateFromTemplateHandler" order="first"/>
-        <compileServer.plugin classpath ="jps-plugin-1.0-SNAPSHOT.jar" />
+        <compileServer.plugin classpath ="jps-plugin.jar" />
         <internalFileTemplate name="Prism Contract"/>
     </extensions>
 

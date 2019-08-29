@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'scala'
+    id 'org.jetbrains.intellij' version "0.4.10"
+}
+
+allprojects {
+    sourceCompatibility = 1.8
+
+    apply plugin: 'org.jetbrains.intellij'
+    intellij {
+        version '2018.2.7'
+        downloadSources Boolean.valueOf(true)
+        sandboxDirectory project.rootDir.canonicalPath + "/.sandbox"
+    }
+    dependencies {
+        implementation 'org.scala-lang:scala-library:2.13.0'
+        testImplementation 'org.scalatest:scalatest_2.11:3.0.0'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+    repositories {
+        mavenCentral()
+    }
+}
+
+group 'org.encryfoundation'
+version '0.1'
+
+configurations {
+    scalaCompiler
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+apply plugin: 'scala'
+
+sourceSets {
+    main {
+        scala.srcDirs += 'src/main/gen'
+    }
+    test {
+        java.srcDir 'src/test/java'
+        scala.srcDir 'src/test/scala'
+    }
+}
+
+patchPluginXml {
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+}
