@@ -1,0 +1,98 @@
+{
+  parserClass="org.encryfoundation.prismPlugin.GeneratedParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Prism"
+  psiImplClassSuffix="Impl"
+  psiPackage="org.encryfoundation.prismPlugin.psi"
+  psiImplPackage="org.encryfoundation.prismPlugin.impl"
+
+  elementTypeHolderClass="org.encryfoundation.prismPlugin.psi.PrismTypes"
+  elementTypeClass="org.encryfoundation.prismPlugin.psi.PrismElementType"
+  tokenTypeClass="org.encryfoundation.prismPlugin.psi.PrismTokenType"
+
+  tokens = [
+
+        //bool types
+        BOOLEAN_TRUE = 'true'
+        BOOLEAN_FALSE = 'false'
+
+        //compr
+        LT = '<'
+        GT = '>'
+        EQ = '=='
+        GtE = '>='
+        LtE = '<='
+        NotEq = '<>'
+
+        //math
+        ADD = '+'
+        SUB = '-'
+        POW = '**'
+        MULT = '*'
+        DIV = "/"
+        MOD = '%'
+
+        BASE58_STR = 'base58'
+        BASE16_STR = 'base16'
+
+        LAMB_DEF = 'lamb'
+        VAR_DEF = 'let'
+
+        CONTRACT_INIT = 'contract'
+
+        NUMBER = 'regexp:[0-9]+'
+        STRING = 'regexp:["][a-zA-Z0-9_]*["]]'
+        IDENTIFIER = 'regexp:[a-zA-Z_][a-zA-Z0-9_]*'
+
+        WHITE_SPACE = 'regexp:\s+'
+    ]
+}
+
+
+SimpleFile ::= Contract
+
+BooleanType ::= BOOLEAN_TRUE | BOOLEAN_FALSE
+
+Base58Str ::= BASE58_STR"'"STRING"'"
+
+Base16Str ::= Base16_STR"'"STRING"'"
+
+MathOp ::= ADD | SUB | POW | MULT | DIV | MOD
+
+ComprOp ::= GT | LT | EQ | GtE | LtE | NotEq
+
+FunctionDefinition ::= def IDENTIFIER '(' ArgsList ')' (':' Type)? '=' Expr
+
+VariableDefinition ::= VAR_DEF IDENTIFIER '=' Expr
+
+Type ::= Any | Unit | Bool | Int | Byte | String // add collections
+
+ArgsList ::= IDENTIFIER (':' Type)? (',' ArgsList)?
+
+//exprs
+
+//arithm
+
+    RightArithExpr ::= MathOp (NUMBER | IDENTIFIER) (RightArithExpr)?
+
+    AritmExpr ::= (NUMBER | IDENTIFIER) RightArithExpr
+
+//compr
+
+    RightComprExpr ::= ComprOp (BooleanType | IDENTIFIER) (RightComprExpr)?
+
+    ComprExpr ::= (BooleanType | IDENTIFIER) RightComprExpr?
+
+//lamb def
+
+    LambExpr ::= LAMB_DEF '(' ArgsList ')' '=' Expr
+
+// global expr
+
+    Expr ::= AritmExpr | ComprExpr | LambExpr | FunctionDefinition | VariableDefinition
+
+//Contract
+
+    Contract ::= CONTRACT_INIT '(' ArgsList? ')' '=' '{' Expr* '}'

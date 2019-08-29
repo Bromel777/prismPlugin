@@ -1,0 +1,35 @@
+<idea-plugin>
+    <id>prismPlugin</id>
+    <name>Prism</name>
+    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+
+    <description><![CDATA[
+    Plugin for support Prism language.<br>
+    <em></em>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="org.encryfoundation.prismPlugin.PrismFileTypeFactory"/>
+        <lang.parserDefinition language="Prism" implementationClass="org.encryfoundation.prismPlugin.PrismParser"/>
+        <sdkType implementation="org.encryfoundation.prismPlugin.sdk.PrismSdkType"/>
+        <createFromTemplateHandler implementation="org.encryfoundation.prismPlugin.actions.PrismCreateFromTemplateHandler" order="first"/>
+        <compileServer.plugin classpath ="jps-plugin.jar" />
+        <internalFileTemplate name="Prism Contract"/>
+    </extensions>
+
+    <actions>
+        <action id="Prism.NewPrismFile" class="org.encryfoundation.prismPlugin.actions.CreatePrismFileAction"
+                text="Prism" description="Create new Prism contract">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        </action>
+    </actions>
+</idea-plugin>
