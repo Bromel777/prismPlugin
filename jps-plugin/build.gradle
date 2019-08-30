@@ -1,3 +1,6 @@
+intellij.type = 'jps'
+
 jar.archiveName = "jps-plugin.jar"
 
 apply plugin: 'scala'
+

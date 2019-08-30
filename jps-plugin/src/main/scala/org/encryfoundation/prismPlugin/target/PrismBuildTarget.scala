@@ -10,16 +10,20 @@ import org.jetbrains.jps.incremental.CompileContext
 import org.jetbrains.jps.indices.IgnoredFileIndex
 import org.jetbrains.jps.indices.ModuleExcludeIndex
 import org.jetbrains.jps.model.JpsModel
+import org.jetbrains.jps.model.module.JpsModule
 
-class PrismBuildTarget(targetType: PrismBuildTargetType) extends BuildTarget[PrismBuildRootDescriptor](targetType){
+final case class PrismBuildTarget(targetType: PrismBuildTargetType, jpsModule: JpsModule)
+  extends ModuleBasedTarget[PrismBuildRootDescriptor](targetType, jpsModule){
 
-  override def getId: String = "prism build target"
+  println("invoke: PrismBuildTarget")
+
+  override def getId: String = myModule.getName
 
   override def computeDependencies(targetRegistry: BuildTargetRegistry,
                                    outputIndex: TargetOutputIndex): util.Collection[BuildTarget[_ <: BuildRootDescriptor]] =
     {
       println("computeDependencies")
-      throw new NotImplementedException("computeDependencies")
+      throw new Exception("computeDependencies")
     }
 
   override def computeRootDescriptors(model: JpsModel,
@@ -28,18 +32,20 @@ class PrismBuildTarget(targetType: PrismBuildTargetType) extends BuildTarget[Pri
                                       dataPaths: BuildDataPaths): util.List[PrismBuildRootDescriptor] =
     {
       println("computeRootDescriptors")
-      throw new NotImplementedException("computeRootDescriptors")
+      throw new Exception("computeRootDescriptors")
     }
 
   override def findRootDescriptor(rootId: String,
                                   rootIndex: BuildRootIndex): PrismBuildRootDescriptor =
     {
       println("findRootDescriptor")
-      throw new NotImplementedException("findRootDescriptor")
+      throw new Exception("findRootDescriptor")
     }
 
   override def getPresentableName: String = "prism build target represent"
 
   override def getOutputRoots(context: CompileContext): util.Collection[File] =
-    throw new NotImplementedException("getOutputRoots")
+    throw new Exception("getOutputRoots")
+
+  override def isTests: Boolean = false
 }

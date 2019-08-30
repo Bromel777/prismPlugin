@@ -1,17 +1,15 @@
 plugins {
     id 'java'
     id 'scala'
-    id 'org.jetbrains.intellij' version "0.4.10"
+    id 'org.jetbrains.intellij' version "0.4.9"
 }
 
 allprojects {
     sourceCompatibility = 1.8
-
     apply plugin: 'org.jetbrains.intellij'
     intellij {
         version '2018.2.7'
         downloadSources Boolean.valueOf(true)
-        sandboxDirectory project.rootDir.canonicalPath + "/.sandbox"
     }
     dependencies {
         implementation 'org.scala-lang:scala-library:2.13.0'
@@ -28,6 +26,10 @@ version '0.1'
 
 configurations {
     scalaCompiler
+}
+
+dependencies {
+    compile project('jps-plugin')
 }
 
 repositories {

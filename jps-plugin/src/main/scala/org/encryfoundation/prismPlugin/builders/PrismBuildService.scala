@@ -8,6 +8,8 @@ import org.jetbrains.jps.incremental.{BuilderService, TargetBuilder}
 
 class PrismBuildService extends BuilderService {
 
+  println("PrismBuildService")
+
   override def getTargetTypes: util.List[PrismBuildTargetType] = {
     println("getTargetTypes")
     List(PrismBuildTargetType.instance).asJava
@@ -15,6 +17,6 @@ class PrismBuildService extends BuilderService {
 
   override def createBuilders(): util.List[PrismBuilder] = {
     println("Called createBuilders")
-    List(PrismBuilder()).asJava
+    List(new PrismBuilder()).asJava
   }
 }

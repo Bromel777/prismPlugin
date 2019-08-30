@@ -21,8 +21,11 @@
         <fileTypeFactory implementation="org.encryfoundation.prismPlugin.PrismFileTypeFactory"/>
         <lang.parserDefinition language="Prism" implementationClass="org.encryfoundation.prismPlugin.PrismParser"/>
         <sdkType implementation="org.encryfoundation.prismPlugin.sdk.PrismSdkType"/>
+        <moduleBuilder builderClass="org.encryfoundation.prismPlugin.project.PrismModuleBuilder" id="prism_step"
+                       order="first"/>
+        <moduleType id="PRISM_MODULE" implementationClass="org.encryfoundation.prismPlugin.project.PrismModuleType"/>
         <createFromTemplateHandler implementation="org.encryfoundation.prismPlugin.actions.PrismCreateFromTemplateHandler" order="first"/>
-        <compileServer.plugin classpath ="jps-plugin.jar" />
+        <compileServer.plugin classpath ="jps-plugin.jar;scala-library-2.13.0.jar" />
         <internalFileTemplate name="Prism Contract"/>
     </extensions>
 
