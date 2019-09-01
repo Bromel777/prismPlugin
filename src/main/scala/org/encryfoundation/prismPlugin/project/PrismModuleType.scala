@@ -8,7 +8,7 @@ class PrismModuleType extends ModuleType[PrismModuleBuilder](PrismModuleType.id)
 
   override def createModuleBuilder(): PrismModuleBuilder = new PrismModuleBuilder
 
-  override def getName: String = "PRISM_MODULE"
+  override def getName: String = "prism"
 
   override def getDescription: String = "Prism (desc)"
 

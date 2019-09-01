@@ -14,7 +14,7 @@ class JpsPrismModelSerializerExtension extends JpsModelSerializerExtension {
   override def getModulePropertiesSerializers: util.List[_ <: JpsModulePropertiesSerializer[_ <: JpsElement]] = {
     List(
       new JpsModulePropertiesSerializer[JpsDummyElement](JpsPrismModuleType.instance,
-        "Prism",
+        "PRISM_MODULE",
         null) {
         override def loadProperties(componentElement: Element): JpsDummyElement =
           JpsElementFactory.getInstance().createDummyElement()
@@ -24,3 +24,5 @@ class JpsPrismModelSerializerExtension extends JpsModelSerializerExtension {
     ).asJava
   }
 }
+
+

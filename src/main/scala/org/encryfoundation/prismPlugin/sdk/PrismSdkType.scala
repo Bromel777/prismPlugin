@@ -18,3 +18,8 @@ case class PrismSdkType() extends SdkType("Prism Sdk Type") {
 
   override def saveAdditionalData(additionalData: SdkAdditionalData, additional: Element): Unit = println("test")
 }
+
+object PrismSdkType {
+
+  def getInstance: PrismSdkType = SdkType.findInstance(classOf[PrismSdkType])
+}

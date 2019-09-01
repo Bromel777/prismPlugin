@@ -1,8 +1,10 @@
 package org.encryfoundation.prismPlugin.project
 
-import com.intellij.ide.util.projectWizard.ModuleBuilder
+import com.intellij.ide.util.projectWizard.{ModuleBuilder, ModuleWizardStep, ProjectJdkForModuleStep, WizardContext}
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.roots.ModifiableRootModel
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider
+import org.encryfoundation.prismPlugin.sdk.PrismSdkType
 
 class PrismModuleBuilder extends ModuleBuilder {
 
@@ -19,4 +21,13 @@ class PrismModuleBuilder extends ModuleBuilder {
     println("Invoke getModuleType")
     PrismModuleType.getInstance
   }
+
+  override def createWizardSteps(wizardContext: WizardContext,
+                                 modulesProvider: ModulesProvider): Array[ModuleWizardStep] =
+    Array[ModuleWizardStep](new ProjectJdkForModuleStep(wizardContext, PrismSdkType.getInstance) {
+      override def updateDataModel() = {
+        PrismModuleBuilder.this.setModuleJdk(getJdk)
+        super.updateDataModel()
+      }
+  })
 }
