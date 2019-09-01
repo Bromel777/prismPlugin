@@ -39,10 +39,7 @@ class PrismBuilder() extends
     println(s"Output stream: ")
     val jpsInter = PrismJpsInterface(target.getModule, context)
     val commandLine = jpsInter.buildCommandLine
-    val process = commandLine.createProcess()
-    process.getOutputStream.write("test".getBytes)
-    println("write:" + process.getInputStream.read())
-    throw new Exception("build")
+    //throw new Exception("build")
   }
 
   def getOutputDirectory(module: JpsModule, forTests: Boolean, context: CompileContext): File = {
