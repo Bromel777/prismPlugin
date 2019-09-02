@@ -1,8 +1,11 @@
 package org.encryfoundation.prismPlugin.builders
 
 import java.io.File
+import java.nio.charset.Charset
 
 import com.intellij.execution.configurations.GeneralCommandLine
+import com.intellij.execution.process.{BaseOSProcessHandler, ProcessEvent, ProcessListener}
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.io.FileUtil
 import org.encryfoundation.prismPlugin.jps.PrismJpsInterface
 import org.encryfoundation.prismPlugin.model.JpsPrismModuleType
@@ -37,9 +40,34 @@ class PrismBuilder() extends
     getOutputDirectory(target.getModule, forTests = false, context)
     //context.processMessage(message)
     println(s"Output stream: ")
-    val jpsInter = PrismJpsInterface(target.getModule, context)
+    val outputDirectory = getOutputDirectory(target.getModule, forTests = false, context)
+    context.processMessage(new ProgressMessage("Compiling Prism sources"))
+    runPrismC(target.getModule, outputDirectory, context)
+    context.checkCanceled()
+    context.processMessage(new ProgressMessage(""))
+  }
+
+  def runPrismC(module: JpsModule,
+                outputDirectory: File,
+                compileContext: CompileContext): Unit = {
+    val jpsInter = PrismJpsInterface(module, compileContext)
     val commandLine = jpsInter.buildCommandLine
-    //throw new Exception("build")
+    val fileToCompile = new File(
+      module.getContentRootsList.getUrls.get(0).substring("file://".length)
+    ).listFiles()
+      .find(file => getFileExtension(file) == "pr")
+      .head
+    println(fileToCompile.getAbsoluteFile)
+    commandLine.addParameter(fileToCompile.getAbsolutePath)
+    println(s"command: ${commandLine.getCommandLineString}")
+    val handler = new BaseOSProcessHandler(
+      commandLine.createProcess(),
+      commandLine.getCommandLineString,
+      Charset.defaultCharset()
+    )
+    handler.addProcessListener(PrismCProcessListener())
+    handler.startNotify()
+    handler.waitFor()
   }
 
   def getOutputDirectory(module: JpsModule, forTests: Boolean, context: CompileContext): File = {
@@ -62,4 +90,24 @@ class PrismBuilder() extends
     println("getPresentableName ")
     "Prism builder"
   }
+
+  private def getFileExtension(file: File) = {
+    val fileName = file.getName
+    if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) fileName.substring(fileName.lastIndexOf(".") + 1)
+    else ""
+  }
+
+  case class PrismCProcessListener() extends ProcessListener {
+
+    var parsingState = "Start"
+
+    override def startNotified(event: ProcessEvent): Unit = ()
+
+    override def processTerminated(event: ProcessEvent): Unit = ()
+
+    override def processWillTerminate(event: ProcessEvent, willBeDestroyed: Boolean): Unit = ()
+
+    override def onTextAvailable(event: ProcessEvent, outputType: Key[_]): Unit = ()
+  }
 }
+

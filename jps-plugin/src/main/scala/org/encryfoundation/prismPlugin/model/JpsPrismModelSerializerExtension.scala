@@ -7,6 +7,7 @@ import org.jdom.Element
 import scala.jdk.CollectionConverters._
 import org.jetbrains.jps.model.{JpsDummyElement, JpsElement, JpsElementFactory}
 import org.jetbrains.jps.model.serialization.JpsModelSerializerExtension
+import org.jetbrains.jps.model.serialization.library.JpsSdkPropertiesSerializer
 import org.jetbrains.jps.model.serialization.module.JpsModulePropertiesSerializer
 
 class JpsPrismModelSerializerExtension extends JpsModelSerializerExtension {
@@ -20,6 +21,18 @@ class JpsPrismModelSerializerExtension extends JpsModelSerializerExtension {
           JpsElementFactory.getInstance().createDummyElement()
 
         override def saveProperties(properties: JpsDummyElement, componentElement: Element): Unit = ()
+      }
+    ).asJava
+  }
+
+  override def getSdkPropertiesSerializers: util.List[_ <: JpsSdkPropertiesSerializer[_ <: JpsElement]] = {
+    List(
+      new JpsSdkPropertiesSerializer[JpsDummyElement]("PRISM_SDK", JpsPrismSdkType.instance){
+
+        override def loadProperties(propertiesElement: Element): JpsDummyElement =
+          JpsElementFactory.getInstance().createDummyElement()
+
+        override def saveProperties(properties: JpsDummyElement, element: Element): Unit = ()
       }
     ).asJava
   }
