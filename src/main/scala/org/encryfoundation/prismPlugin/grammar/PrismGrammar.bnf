@@ -34,6 +34,15 @@
         DIV = "/"
         MOD = '%'
 
+        //type
+        ANY_TYPE = 'Any'
+        UNIT_TYPE = 'Unit'
+        BOOL_TYPE = 'Bool'
+        INT_TYPE = 'Int'
+        BYTE_TYPE = 'Byte'
+        STRING_TYPE = 'Sting'
+
+
         LEFT_CURLY_BRACKET = '{'
         RIGHT_CURLY_BRACKET = '}'
 
@@ -79,7 +88,7 @@ STMT ::= NUMBER | STRING | BooleanType | IDENTIFIER
 
 VariableDefinition ::= VAR_DEF IDENTIFIER EQU STMT
 
-Type ::= Any | Unit | Bool | Int | Byte | String // add collections
+Type ::= ANY_TYPE | UNIT_TYPE | BOOL_TYPE | INT_TYPE | BYTE_TYPE | STRING_TYPE // add collections
 
 ArgsList ::= IDENTIFIER (':' Type)? (',' ArgsList)?
 

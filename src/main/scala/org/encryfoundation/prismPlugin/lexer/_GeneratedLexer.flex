@@ -48,6 +48,12 @@ WHITE_SPACE=[ \t\n\x0B\f\r]+
   "*"                { return MULT; }
   "/"                { return DIV; }
   "%"                { return MOD; }
+  "Any"              { return ANY_TYPE; }
+  "Unit"             { return UNIT_TYPE; }
+  "Bool"             { return BOOL_TYPE; }
+  "Int"              { return INT_TYPE; }
+  "Byte"             { return BYTE_TYPE; }
+  "Sting"            { return STRING_TYPE; }
   "{"                { return LEFT_CURLY_BRACKET; }
   "}"                { return RIGHT_CURLY_BRACKET; }
   "("                { return LEFT_ROUND_BRACKET; }
@@ -60,11 +66,6 @@ WHITE_SPACE=[ \t\n\x0B\f\r]+
   "let"              { return VAR_DEF; }
   "contract"         { return CONTRACT_INIT; }
   "def"              { return DEF; }
-  "Any"              { return ANY; }
-  "Unit"             { return UNIT; }
-  "Bool"             { return BOOL; }
-  "Int"              { return INT; }
-  "Byte"             { return BYTE; }
 
   {NUMBER}           { return NUMBER; }
   {STRING}           { return STRING; }

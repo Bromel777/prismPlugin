@@ -27,13 +27,13 @@ public interface PrismTypes {
   IElementType VARIABLE_DEFINITION = new PrismElementType("VARIABLE_DEFINITION");
 
   IElementType ADD = new PrismTokenType("+");
-  IElementType ANY = new PrismTokenType("Any");
+  IElementType ANY_TYPE = new PrismTokenType("Any");
   IElementType BASE16_STR = new PrismTokenType("Base16_STR");
   IElementType BASE58_STR = new PrismTokenType("base58");
-  IElementType BOOL = new PrismTokenType("Bool");
   IElementType BOOLEAN_FALSE = new PrismTokenType("false");
   IElementType BOOLEAN_TRUE = new PrismTokenType("true");
-  IElementType BYTE = new PrismTokenType("Byte");
+  IElementType BOOL_TYPE = new PrismTokenType("Bool");
+  IElementType BYTE_TYPE = new PrismTokenType("Byte");
   IElementType COLON = new PrismTokenType(":");
   IElementType CONTRACT_INIT = new PrismTokenType("contract");
   IElementType DEF = new PrismTokenType("def");
@@ -43,7 +43,7 @@ public interface PrismTypes {
   IElementType GT = new PrismTokenType(">");
   IElementType GTE = new PrismTokenType(">=");
   IElementType IDENTIFIER = new PrismTokenType("IDENTIFIER");
-  IElementType INT = new PrismTokenType("Int");
+  IElementType INT_TYPE = new PrismTokenType("Int");
   IElementType LAMB_DEF = new PrismTokenType("lamb");
   IElementType LEFT_CURLY_BRACKET = new PrismTokenType("{");
   IElementType LEFT_ROUND_BRACKET = new PrismTokenType("(");
@@ -56,9 +56,10 @@ public interface PrismTypes {
   IElementType POW = new PrismTokenType("**");
   IElementType RIGHT_CURLY_BRACKET = new PrismTokenType("}");
   IElementType RIGHT_ROUND_BRACKET = new PrismTokenType(")");
-  IElementType STRING = new PrismTokenType("String");
+  IElementType STRING = new PrismTokenType("STRING");
+  IElementType STRING_TYPE = new PrismTokenType("Sting");
   IElementType SUB = new PrismTokenType("-");
-  IElementType UNIT = new PrismTokenType("Unit");
+  IElementType UNIT_TYPE = new PrismTokenType("Unit");
   IElementType VAR_DEF = new PrismTokenType("let");
 
   class Factory {

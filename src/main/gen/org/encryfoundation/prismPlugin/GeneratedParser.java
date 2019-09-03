@@ -418,17 +418,17 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Any | Unit | Bool | Int | Byte | String
+  // ANY_TYPE | UNIT_TYPE | BOOL_TYPE | INT_TYPE | BYTE_TYPE | STRING_TYPE
   public static boolean Type(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Type")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, TYPE, "<type>");
-    r = consumeToken(b, ANY);
-    if (!r) r = consumeToken(b, UNIT);
-    if (!r) r = consumeToken(b, BOOL);
-    if (!r) r = consumeToken(b, INT);
-    if (!r) r = consumeToken(b, BYTE);
-    if (!r) r = consumeToken(b, STRING);
+    r = consumeToken(b, ANY_TYPE);
+    if (!r) r = consumeToken(b, UNIT_TYPE);
+    if (!r) r = consumeToken(b, BOOL_TYPE);
+    if (!r) r = consumeToken(b, INT_TYPE);
+    if (!r) r = consumeToken(b, BYTE_TYPE);
+    if (!r) r = consumeToken(b, STRING_TYPE);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
