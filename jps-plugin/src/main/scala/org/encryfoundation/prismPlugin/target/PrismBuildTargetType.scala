@@ -1,7 +1,7 @@
 package org.encryfoundation.prismPlugin.target
 
 import java.util
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 import org.apache.commons.lang.NotImplementedException
 import org.encryfoundation.prismPlugin.model.JpsPrismModuleType
 import org.jetbrains.jps.builders.{BuildTargetLoader, BuildTargetType, ModuleBasedBuildTargetType}

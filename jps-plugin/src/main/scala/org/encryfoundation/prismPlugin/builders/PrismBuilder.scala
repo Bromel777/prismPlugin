@@ -17,7 +17,7 @@ import org.jetbrains.jps.incremental.{CompileContext, TargetBuilder}
 import org.jetbrains.jps.model.java.JpsJavaExtensionService
 import org.jetbrains.jps.model.module.JpsModule
 
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 
 class PrismBuilder() extends
   TargetBuilder[PrismBuildRootDescriptor, PrismBuildTarget](List(PrismBuildTargetType.instance).asJava){

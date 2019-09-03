@@ -2,8 +2,7 @@ package org.encryfoundation.prismPlugin.target
 
 import java.io.File
 import java.util
-
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 import com.intellij.util.containers.ContainerUtil
 import org.apache.commons.lang.NotImplementedException
 import org.jetbrains.jps.builders._
@@ -45,13 +44,11 @@ final case class PrismBuildTarget(targetType: PrismBuildTargetType, jpsModule: J
   override def findRootDescriptor(rootId: String,
                                   rootIndex: BuildRootIndex): PrismBuildRootDescriptor = {
     println("findRootDescriptor")
-    ContainerUtil.getFirstItem(
-      rootIndex.getRootDescriptors(
-        new File(rootId),
-        List(getPrismBuildTargetType).asJava,
-        null
-      )
-    )
+    rootIndex.getRootDescriptors(
+      new File(rootId),
+      List(getPrismBuildTargetType).asJava,
+      null
+    ).asScala.head
   }
 
   override def getPresentableName: String = "prism build target represent"

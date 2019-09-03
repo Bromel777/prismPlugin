@@ -32,7 +32,7 @@ case class PrismJpsInterface private (rootDir: File, comilerFileName: File) {
 
 object PrismJpsInterface {
 
-  import scala.jdk.CollectionConverters._
+  import scala.collection.JavaConverters._
 
   def apply(module: JpsModule, context: CompileContext): PrismJpsInterface = {
     val moduleRoot = module.getContentRootsList.getUrls.get(0).substring("file://".length)

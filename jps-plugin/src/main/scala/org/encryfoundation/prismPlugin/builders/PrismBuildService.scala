@@ -1,7 +1,7 @@
 package org.encryfoundation.prismPlugin.builders
 
 import java.util
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 import org.encryfoundation.prismPlugin.target.PrismBuildTargetType
 import org.jetbrains.jps.builders.{BuildRootDescriptor, BuildTarget, BuildTargetType}
 import org.jetbrains.jps.incremental.{BuilderService, TargetBuilder}

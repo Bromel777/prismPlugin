@@ -8,15 +8,14 @@ import com.intellij.openapi.project.Project
 import org.encryfoundation.prismPlugin.target.PrismBuildTargetType
 import org.jetbrains.jps.api.CmdlineProtoUtil
 import org.jetbrains.jps.api.CmdlineRemoteProto.Message.ControllerMessage.ParametersMessage.TargetTypeBuildScope
-
-import scala.jdk.CollectionConverters._
+import scala.collection.JavaConverters._
 
 class PrismBuildScopeProvider extends BuildTargetScopeProvider {
 
   override def getBuildTargetScopes(baseScope: CompileScope,
                                     project: Project,
                                     forceBuild: Boolean): util.List[TargetTypeBuildScope] = {
-    System.out.println("getBuildTargetScopes was called")
+    System.out.println("getBuildTargetScopes was called.")
     val modules = List(baseScope.getAffectedModules).flatten
     val moduleIds = modules.map(_.getName).asJava
     val scope = CmdlineProtoUtil.createTargetsScope(PrismBuildTargetType.instance.getTypeId, moduleIds, true)
