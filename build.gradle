@@ -31,6 +31,10 @@ configurations {
     scalaCompiler
 }
 
+publishPlugin {
+    channels 'Alpha'
+}
+
 dependencies {
     compile project('jps-plugin')
 }

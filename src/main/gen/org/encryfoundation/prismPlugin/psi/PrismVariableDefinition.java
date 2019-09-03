@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface PrismVariableDefinition extends PsiElement {
 
   @NotNull
-  PrismExpr getExpr();
+  PrismStmt getStmt();
 
   @NotNull
   PsiElement getIdentifier();

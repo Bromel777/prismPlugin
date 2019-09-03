@@ -63,7 +63,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "ArgsList_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, ":");
+    r = consumeToken(b, COLON);
     r = r && Type(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
@@ -197,20 +197,17 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CONTRACT_INIT '(' ArgsList? ')' '=' '{' Expr* '}'
+  // CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET Expr* RIGHT_CURLY_BRACKET
   public static boolean Contract(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Contract")) return false;
     if (!nextTokenIs(b, CONTRACT_INIT)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, CONTRACT_INIT);
-    r = r && consumeToken(b, "(");
+    r = consumeTokens(b, 0, CONTRACT_INIT, LEFT_ROUND_BRACKET);
     r = r && Contract_2(b, l + 1);
-    r = r && consumeToken(b, ")");
-    r = r && consumeToken(b, "=");
-    r = r && consumeToken(b, "{");
+    r = r && consumeTokens(b, 0, RIGHT_ROUND_BRACKET, EQU, LEFT_CURLY_BRACKET);
     r = r && Contract_6(b, l + 1);
-    r = r && consumeToken(b, "}");
+    r = r && consumeToken(b, RIGHT_CURLY_BRACKET);
     exit_section_(b, m, CONTRACT, r);
     return r;
   }
@@ -249,21 +246,28 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // def IDENTIFIER '(' ArgsList ')' (':' Type)? '=' Expr
+  // def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (':' Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
   public static boolean FunctionDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionDefinition")) return false;
     if (!nextTokenIs(b, DEF)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, DEF, IDENTIFIER);
-    r = r && consumeToken(b, "(");
-    r = r && ArgsList(b, l + 1);
-    r = r && consumeToken(b, ")");
+    r = consumeTokens(b, 0, DEF, IDENTIFIER, LEFT_ROUND_BRACKET);
+    r = r && FunctionDefinition_3(b, l + 1);
+    r = r && consumeToken(b, RIGHT_ROUND_BRACKET);
     r = r && FunctionDefinition_5(b, l + 1);
-    r = r && consumeToken(b, "=");
+    r = r && consumeTokens(b, 0, EQU, LEFT_CURLY_BRACKET);
     r = r && Expr(b, l + 1);
+    r = r && consumeToken(b, RIGHT_CURLY_BRACKET);
     exit_section_(b, m, FUNCTION_DEFINITION, r);
     return r;
+  }
+
+  // ArgsList?
+  private static boolean FunctionDefinition_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionDefinition_3")) return false;
+    ArgsList(b, l + 1);
+    return true;
   }
 
   // (':' Type)?
@@ -278,24 +282,22 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "FunctionDefinition_5_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, ":");
+    r = consumeToken(b, COLON);
     r = r && Type(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // LAMB_DEF '(' ArgsList ')' '=' Expr
+  // LAMB_DEF LEFT_ROUND_BRACKET ArgsList RIGHT_ROUND_BRACKET EQU Expr
   public static boolean LambExpr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "LambExpr")) return false;
     if (!nextTokenIs(b, LAMB_DEF)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, LAMB_DEF);
-    r = r && consumeToken(b, "(");
+    r = consumeTokens(b, 0, LAMB_DEF, LEFT_ROUND_BRACKET);
     r = r && ArgsList(b, l + 1);
-    r = r && consumeToken(b, ")");
-    r = r && consumeToken(b, "=");
+    r = r && consumeTokens(b, 0, RIGHT_ROUND_BRACKET, EQU);
     r = r && Expr(b, l + 1);
     exit_section_(b, m, LAMB_EXPR, r);
     return r;
@@ -396,6 +398,20 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // NUMBER | STRING | BooleanType | IDENTIFIER
+  public static boolean STMT(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "STMT")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, STMT, "<stmt>");
+    r = consumeToken(b, NUMBER);
+    if (!r) r = consumeToken(b, STRING);
+    if (!r) r = BooleanType(b, l + 1);
+    if (!r) r = consumeToken(b, IDENTIFIER);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
   // Contract
   static boolean SimpleFile(PsiBuilder b, int l) {
     return Contract(b, l + 1);
@@ -418,15 +434,14 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // VAR_DEF IDENTIFIER '=' Expr
+  // VAR_DEF IDENTIFIER EQU STMT
   public static boolean VariableDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDefinition")) return false;
     if (!nextTokenIs(b, VAR_DEF)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, VAR_DEF, IDENTIFIER);
-    r = r && consumeToken(b, "=");
-    r = r && Expr(b, l + 1);
+    r = consumeTokens(b, 0, VAR_DEF, IDENTIFIER, EQU);
+    r = r && STMT(b, l + 1);
     exit_section_(b, m, VARIABLE_DEFINITION, r);
     return r;
   }

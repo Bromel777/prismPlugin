@@ -23,17 +23,21 @@ final case class PrismSyntaxHighlighter() extends SyntaxHighlighterBase {
   val ID: TextAttributesKey = createTextAttributesKey("ID", DefaultLanguageHighlighterColors.IDENTIFIER)
   val NUMBER: TextAttributesKey = createTextAttributesKey("NUMBER", DefaultLanguageHighlighterColors.NUMBER)
   val KEYWORD: TextAttributesKey = createTextAttributesKey("KEYWORD", DefaultLanguageHighlighterColors.KEYWORD)
+  val FUNC_DEF: TextAttributesKey = createTextAttributesKey("FUNC_DEF", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION)
   val ML_STRING: TextAttributesKey = createTextAttributesKey("ML_STRING", DefaultLanguageHighlighterColors.DOC_COMMENT)
+  val BRACKETS: TextAttributesKey = createTextAttributesKey("BRACKETS", DefaultLanguageHighlighterColors.BRACKETS)
   val SL_COMMENT: TextAttributesKey = createTextAttributesKey("SL_COMMENT_CONTENT", DefaultLanguageHighlighterColors.LINE_COMMENT)
   val CAP: TextAttributesKey = createTextAttributesKey("CAP", DefaultLanguageHighlighterColors.KEYWORD)
+  val TYPE_ATTR: TextAttributesKey = createTextAttributesKey("TYPE", DefaultLanguageHighlighterColors.METADATA)
+  val EQU_ATTR: TextAttributesKey = createTextAttributesKey("EQU", DefaultLanguageHighlighterColors.METADATA)
   val EMPTY = Array.empty[TextAttributesKey]
 
   private val KEYWORDS = Sets.newHashSet(BOOLEAN_TRUE, ARITM_EXPR, BASE_16_STR, BASE_58_STR, BOOLEAN_TYPE,
     COMPR_EXPR, COMPR_OP, CONTRACT, EXPR, FUNCTION_DEFINITION, LAMB_EXPR, MATH_OP, RIGHT_ARITH_EXPR,
     RIGHT_COMPR_EXPR, TYPE, VARIABLE_DEFINITION, ADD, ANY, BASE16_STR, BASE58_STR, BOOL, BOOLEAN_FALSE,
     BOOLEAN_TRUE, BYTE, CONTRACT_INIT, DEF, DIV, EQ, GT, GTE, IDENTIFIER, INT, LAMB_DEF, LT, LTE,
-    MOD, MULT, NOTEQ, NUMBER, POW, STRING, SUB, UNIT, VAR_DEF)
-
+    MOD, MULT, NOTEQ, NUMBER, POW, STRING, SUB, UNIT, VAR_DEF, LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET,
+    LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET, EQU)
 
   override def getHighlightingLexer: Lexer = new FlexAdapter(new _GeneratedLexer(null.asInstanceOf[Reader]))
 
@@ -47,6 +51,10 @@ final case class PrismSyntaxHighlighter() extends SyntaxHighlighterBase {
     case PrismTypes.IDENTIFIER =>
       println("id")
       Array(ID)
+    case DEF => Array(FUNC_DEF)
+    case LEFT_CURLY_BRACKET | RIGHT_CURLY_BRACKET | LEFT_CURLY_BRACKET | RIGHT_CURLY_BRACKET => Array(BRACKETS)
+    case TYPE => Array(TYPE_ATTR)
+    case EQU => Array(EQU_ATTR)
     case keyword if KEYWORDS.contains(keyword) =>
       println("keyword")
       Array(KEYWORD)

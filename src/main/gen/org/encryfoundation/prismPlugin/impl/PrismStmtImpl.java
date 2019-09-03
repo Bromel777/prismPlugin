@@ -11,14 +11,14 @@ import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import org.encryfoundation.prismPlugin.psi.*;
 
-public class PrismVariableDefinitionImpl extends ASTWrapperPsiElement implements PrismVariableDefinition {
+public class PrismStmtImpl extends ASTWrapperPsiElement implements PrismStmt {
 
-  public PrismVariableDefinitionImpl(@NotNull ASTNode node) {
+  public PrismStmtImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PrismVisitor visitor) {
-    visitor.visitVariableDefinition(this);
+    visitor.visitStmt(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -27,15 +27,27 @@ public class PrismVariableDefinitionImpl extends ASTWrapperPsiElement implements
   }
 
   @Override
-  @NotNull
-  public PrismStmt getStmt() {
-    return findNotNullChildByClass(PrismStmt.class);
+  @Nullable
+  public PrismBooleanType getBooleanType() {
+    return findChildByClass(PrismBooleanType.class);
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getIdentifier() {
-    return findNotNullChildByType(IDENTIFIER);
+    return findChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getString() {
+    return findChildByType(STRING);
   }
 
 }

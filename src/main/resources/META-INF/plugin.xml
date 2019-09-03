@@ -1,10 +1,10 @@
 <idea-plugin>
     <id>prismPlugin</id>
     <name>Prism</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="info@encry.com" url="http://encry.com">Encry</vendor>
 
     <description><![CDATA[
-    Plugin for support Prism language.<br>
+    Plugin for support Prism language for Encry Blockchain. On current moment version is alpha.<br>
     <em></em>
     ]]></description>
 
@@ -26,7 +26,7 @@
                        order="first"/>
         <moduleType id="PRISM_MODULE" implementationClass="org.encryfoundation.prismPlugin.project.PrismModuleType"/>
         <createFromTemplateHandler implementation="org.encryfoundation.prismPlugin.actions.PrismCreateFromTemplateHandler" order="first"/>
-        <compileServer.plugin classpath ="jps-plugin.jar;scala-library-2.12.2.jar" />
+        <compileServer.plugin classpath ="scala-library-2.12.2.jar;jps-plugin.jar" />
         <internalFileTemplate name="Prism Contract"/>
     </extensions>
 

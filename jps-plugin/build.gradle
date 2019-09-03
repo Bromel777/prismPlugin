@@ -4,3 +4,5 @@ jar.archiveName = "jps-plugin.jar"
 
 apply plugin: 'scala'
 
+verifyPlugin.enabled = false
+

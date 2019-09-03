@@ -48,6 +48,12 @@ WHITE_SPACE=[ \t\n\x0B\f\r]+
   "*"                { return MULT; }
   "/"                { return DIV; }
   "%"                { return MOD; }
+  "{"                { return LEFT_CURLY_BRACKET; }
+  "}"                { return RIGHT_CURLY_BRACKET; }
+  "("                { return LEFT_ROUND_BRACKET; }
+  ")"                { return RIGHT_ROUND_BRACKET; }
+  "="                { return EQU; }
+  ":"                { return COLON; }
   "base58"           { return BASE58_STR; }
   "base16"           { return BASE16_STR; }
   "lamb"             { return LAMB_DEF; }

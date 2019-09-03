@@ -34,6 +34,16 @@
         DIV = "/"
         MOD = '%'
 
+        LEFT_CURLY_BRACKET = '{'
+        RIGHT_CURLY_BRACKET = '}'
+
+        LEFT_ROUND_BRACKET = '('
+        RIGHT_ROUND_BRACKET = ')'
+
+        EQU = '='
+
+        COLON = ':'
+
         BASE58_STR = 'base58'
         BASE16_STR = 'base16'
 
@@ -63,9 +73,11 @@ MathOp ::= ADD | SUB | POW | MULT | DIV | MOD
 
 ComprOp ::= GT | LT | EQ | GtE | LtE | NotEq
 
-FunctionDefinition ::= def IDENTIFIER '(' ArgsList ')' (':' Type)? '=' Expr
+FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (':' Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
 
-VariableDefinition ::= VAR_DEF IDENTIFIER '=' Expr
+STMT ::= NUMBER | STRING | BooleanType | IDENTIFIER
+
+VariableDefinition ::= VAR_DEF IDENTIFIER EQU STMT
 
 Type ::= Any | Unit | Bool | Int | Byte | String // add collections
 
@@ -87,7 +99,7 @@ ArgsList ::= IDENTIFIER (':' Type)? (',' ArgsList)?
 
 //lamb def
 
-    LambExpr ::= LAMB_DEF '(' ArgsList ')' '=' Expr
+    LambExpr ::= LAMB_DEF LEFT_ROUND_BRACKET ArgsList RIGHT_ROUND_BRACKET EQU Expr
 
 // global expr
 
@@ -95,4 +107,4 @@ ArgsList ::= IDENTIFIER (':' Type)? (',' ArgsList)?
 
 //Contract
 
-    Contract ::= CONTRACT_INIT '(' ArgsList? ')' '=' '{' Expr* '}'
+    Contract ::= CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET Expr* RIGHT_CURLY_BRACKET

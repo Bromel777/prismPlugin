@@ -22,6 +22,7 @@ public interface PrismTypes {
   IElementType MATH_OP = new PrismElementType("MATH_OP");
   IElementType RIGHT_ARITH_EXPR = new PrismElementType("RIGHT_ARITH_EXPR");
   IElementType RIGHT_COMPR_EXPR = new PrismElementType("RIGHT_COMPR_EXPR");
+  IElementType STMT = new PrismElementType("STMT");
   IElementType TYPE = new PrismElementType("TYPE");
   IElementType VARIABLE_DEFINITION = new PrismElementType("VARIABLE_DEFINITION");
 
@@ -33,15 +34,19 @@ public interface PrismTypes {
   IElementType BOOLEAN_FALSE = new PrismTokenType("false");
   IElementType BOOLEAN_TRUE = new PrismTokenType("true");
   IElementType BYTE = new PrismTokenType("Byte");
+  IElementType COLON = new PrismTokenType(":");
   IElementType CONTRACT_INIT = new PrismTokenType("contract");
   IElementType DEF = new PrismTokenType("def");
   IElementType DIV = new PrismTokenType("/");
   IElementType EQ = new PrismTokenType("==");
+  IElementType EQU = new PrismTokenType("=");
   IElementType GT = new PrismTokenType(">");
   IElementType GTE = new PrismTokenType(">=");
   IElementType IDENTIFIER = new PrismTokenType("IDENTIFIER");
   IElementType INT = new PrismTokenType("Int");
   IElementType LAMB_DEF = new PrismTokenType("lamb");
+  IElementType LEFT_CURLY_BRACKET = new PrismTokenType("{");
+  IElementType LEFT_ROUND_BRACKET = new PrismTokenType("(");
   IElementType LT = new PrismTokenType("<");
   IElementType LTE = new PrismTokenType("<=");
   IElementType MOD = new PrismTokenType("%");
@@ -49,6 +54,8 @@ public interface PrismTypes {
   IElementType NOTEQ = new PrismTokenType("<>");
   IElementType NUMBER = new PrismTokenType("NUMBER");
   IElementType POW = new PrismTokenType("**");
+  IElementType RIGHT_CURLY_BRACKET = new PrismTokenType("}");
+  IElementType RIGHT_ROUND_BRACKET = new PrismTokenType(")");
   IElementType STRING = new PrismTokenType("String");
   IElementType SUB = new PrismTokenType("-");
   IElementType UNIT = new PrismTokenType("Unit");
@@ -98,6 +105,9 @@ public interface PrismTypes {
       }
       else if (type == RIGHT_COMPR_EXPR) {
         return new PrismRightComprExprImpl(node);
+      }
+      else if (type == STMT) {
+        return new PrismStmtImpl(node);
       }
       else if (type == TYPE) {
         return new PrismTypeImpl(node);

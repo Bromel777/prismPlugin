@@ -27,9 +27,9 @@ public class PrismFunctionDefinitionImpl extends ASTWrapperPsiElement implements
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PrismArgsList getArgsList() {
-    return findNotNullChildByClass(PrismArgsList.class);
+    return findChildByClass(PrismArgsList.class);
   }
 
   @Override
