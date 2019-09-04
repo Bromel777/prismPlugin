@@ -28,6 +28,18 @@ public class PrismStmtImpl extends ASTWrapperPsiElement implements PrismStmt {
 
   @Override
   @Nullable
+  public PrismBase16Str getBase16Str() {
+    return findChildByClass(PrismBase16Str.class);
+  }
+
+  @Override
+  @Nullable
+  public PrismBase58Str getBase58Str() {
+    return findChildByClass(PrismBase58Str.class);
+  }
+
+  @Override
+  @Nullable
   public PrismBooleanType getBooleanType() {
     return findChildByClass(PrismBooleanType.class);
   }

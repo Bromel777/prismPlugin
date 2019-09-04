@@ -28,8 +28,8 @@ public class PrismBase16StrImpl extends ASTWrapperPsiElement implements PrismBas
 
   @Override
   @NotNull
-  public PsiElement getString() {
-    return findNotNullChildByType(STRING);
+  public PsiElement getBaseString() {
+    return findNotNullChildByType(BASE_STRING);
   }
 
 }

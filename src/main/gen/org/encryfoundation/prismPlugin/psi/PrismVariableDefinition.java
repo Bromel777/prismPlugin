@@ -10,6 +10,9 @@ public interface PrismVariableDefinition extends PsiElement {
   @NotNull
   PrismStmt getStmt();
 
+  @Nullable
+  PrismType getType();
+
   @NotNull
   PsiElement getIdentifier();
 

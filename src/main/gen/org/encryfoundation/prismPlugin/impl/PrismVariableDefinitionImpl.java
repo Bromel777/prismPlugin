@@ -33,6 +33,12 @@ public class PrismVariableDefinitionImpl extends ASTWrapperPsiElement implements
   }
 
   @Override
+  @Nullable
+  public PrismType getType() {
+    return findChildByClass(PrismType.class);
+  }
+
+  @Override
   @NotNull
   public PsiElement getIdentifier() {
     return findNotNullChildByType(IDENTIFIER);

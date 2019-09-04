@@ -38,7 +38,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER (':' Type)? (',' ArgsList)?
+  // IDENTIFIER (COLON Type)? (',' ArgsList)?
   public static boolean ArgsList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArgsList")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
@@ -51,14 +51,14 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (':' Type)?
+  // (COLON Type)?
   private static boolean ArgsList_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArgsList_1")) return false;
     ArgsList_1_0(b, l + 1);
     return true;
   }
 
-  // ':' Type
+  // COLON Type
   private static boolean ArgsList_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArgsList_1_0")) return false;
     boolean r;
@@ -110,31 +110,27 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Base16_STR"'"STRING"'"
-  public static boolean Base16Str(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Base16Str")) return false;
-    if (!nextTokenIs(b, BASE16_STR)) return false;
+  // base16init BASE_STRING
+  public static boolean BASE16_STR(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "BASE16_STR")) return false;
+    if (!nextTokenIs(b, BASE16)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, BASE16_STR);
-    r = r && consumeToken(b, "'");
-    r = r && consumeToken(b, STRING);
-    r = r && consumeToken(b, "'");
+    r = base16init(b, l + 1);
+    r = r && consumeToken(b, BASE_STRING);
     exit_section_(b, m, BASE_16_STR, r);
     return r;
   }
 
   /* ********************************************************** */
-  // BASE58_STR"'"STRING"'"
-  public static boolean Base58Str(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Base58Str")) return false;
-    if (!nextTokenIs(b, BASE58_STR)) return false;
+  // base58init BASE_STRING
+  public static boolean BASE58_STR(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "BASE58_STR")) return false;
+    if (!nextTokenIs(b, BASE58)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, BASE58_STR);
-    r = r && consumeToken(b, "'");
-    r = r && consumeToken(b, STRING);
-    r = r && consumeToken(b, "'");
+    r = base58init(b, l + 1);
+    r = r && consumeToken(b, BASE_STRING);
     exit_section_(b, m, BASE_58_STR, r);
     return r;
   }
@@ -246,7 +242,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (':' Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+  // def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (COLON Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
   public static boolean FunctionDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionDefinition")) return false;
     if (!nextTokenIs(b, DEF)) return false;
@@ -270,14 +266,14 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // (':' Type)?
+  // (COLON Type)?
   private static boolean FunctionDefinition_5(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionDefinition_5")) return false;
     FunctionDefinition_5_0(b, l + 1);
     return true;
   }
 
-  // ':' Type
+  // COLON Type
   private static boolean FunctionDefinition_5_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionDefinition_5_0")) return false;
     boolean r;
@@ -398,12 +394,14 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // NUMBER | STRING | BooleanType | IDENTIFIER
+  // BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | IDENTIFIER
   public static boolean STMT(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "STMT")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, STMT, "<stmt>");
-    r = consumeToken(b, NUMBER);
+    r = BASE58_STR(b, l + 1);
+    if (!r) r = BASE16_STR(b, l + 1);
+    if (!r) r = consumeToken(b, NUMBER);
     if (!r) r = consumeToken(b, STRING);
     if (!r) r = BooleanType(b, l + 1);
     if (!r) r = consumeToken(b, IDENTIFIER);
@@ -434,16 +432,48 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // VAR_DEF IDENTIFIER EQU STMT
+  // VAR_DEF IDENTIFIER (COLON Type)? EQU STMT
   public static boolean VariableDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDefinition")) return false;
     if (!nextTokenIs(b, VAR_DEF)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, VAR_DEF, IDENTIFIER, EQU);
+    r = consumeTokens(b, 0, VAR_DEF, IDENTIFIER);
+    r = r && VariableDefinition_2(b, l + 1);
+    r = r && consumeToken(b, EQU);
     r = r && STMT(b, l + 1);
     exit_section_(b, m, VARIABLE_DEFINITION, r);
     return r;
+  }
+
+  // (COLON Type)?
+  private static boolean VariableDefinition_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDefinition_2")) return false;
+    VariableDefinition_2_0(b, l + 1);
+    return true;
+  }
+
+  // COLON Type
+  private static boolean VariableDefinition_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "VariableDefinition_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COLON);
+    r = r && Type(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // base16
+  static boolean base16init(PsiBuilder b, int l) {
+    return consumeToken(b, BASE16);
+  }
+
+  /* ********************************************************** */
+  // base58
+  static boolean base58init(PsiBuilder b, int l) {
+    return consumeToken(b, BASE58);
   }
 
 }

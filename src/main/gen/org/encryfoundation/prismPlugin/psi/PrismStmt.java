@@ -8,6 +8,12 @@ import com.intellij.psi.PsiElement;
 public interface PrismStmt extends PsiElement {
 
   @Nullable
+  PrismBase16Str getBase16Str();
+
+  @Nullable
+  PrismBase58Str getBase58Str();
+
+  @Nullable
   PrismBooleanType getBooleanType();
 
   @Nullable

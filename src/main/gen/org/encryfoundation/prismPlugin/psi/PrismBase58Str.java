@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface PrismBase58Str extends PsiElement {
 
   @NotNull
-  PsiElement getString();
+  PsiElement getBaseString();
 
 }

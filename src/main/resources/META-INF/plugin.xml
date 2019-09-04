@@ -21,7 +21,6 @@
         <fileTypeFactory implementation="org.encryfoundation.prismPlugin.PrismFileTypeFactory"/>
         <lang.parserDefinition language="Prism" implementationClass="org.encryfoundation.prismPlugin.PrismParser"/>
         <lang.syntaxHighlighterFactory language="Prism" implementationClass="org.encryfoundation.prismPlugin.syntax.PrismSyntaxHighlighterFactory"/>
-        <sdkType implementation="org.encryfoundation.prismPlugin.sdk.PrismSdkType"/>
         <moduleBuilder builderClass="org.encryfoundation.prismPlugin.project.PrismModuleBuilder" id="PRISM_STEP"
                        order="first"/>
         <moduleType id="PRISM_MODULE" implementationClass="org.encryfoundation.prismPlugin.project.PrismModuleType"/>

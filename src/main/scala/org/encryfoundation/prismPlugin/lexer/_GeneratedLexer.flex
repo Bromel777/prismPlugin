@@ -26,7 +26,8 @@ EOL=\R
 WHITE_SPACE=\s+
 
 NUMBER=[0-9]+
-STRING=[\"][a-zA-Z0-9_]*[\"]]
+STRING=[\"][a-zA-Z0-9_]*[\"]
+BASE_STRING=['][a-zA-Z0-9_]*[']
 IDENTIFIER=[a-zA-Z_][a-zA-Z0-9_]*
 WHITE_SPACE=[ \t\n\x0B\f\r]+
 
@@ -60,15 +61,18 @@ WHITE_SPACE=[ \t\n\x0B\f\r]+
   ")"                { return RIGHT_ROUND_BRACKET; }
   "="                { return EQU; }
   ":"                { return COLON; }
-  "base58"           { return BASE58_STR; }
-  "base16"           { return BASE16_STR; }
+  "\""               { return DOUBLE_QUOTES; }
+  "'"                { return SINGLE_QUOTE; }
   "lamb"             { return LAMB_DEF; }
   "let"              { return VAR_DEF; }
   "contract"         { return CONTRACT_INIT; }
+  "base58"           { return BASE58; }
+  "base16"           { return BASE16; }
   "def"              { return DEF; }
 
   {NUMBER}           { return NUMBER; }
   {STRING}           { return STRING; }
+  {BASE_STRING}      { return BASE_STRING; }
   {IDENTIFIER}       { return IDENTIFIER; }
   {WHITE_SPACE}      { return WHITE_SPACE; }
 

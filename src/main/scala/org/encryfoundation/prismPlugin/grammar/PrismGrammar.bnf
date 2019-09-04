@@ -53,8 +53,8 @@
 
         COLON = ':'
 
-        BASE58_STR = 'base58'
-        BASE16_STR = 'base16'
+        DOUBLE_QUOTES = '"'
+        SINGLE_QUOTE = "'"
 
         LAMB_DEF = 'lamb'
         VAR_DEF = 'let'
@@ -62,7 +62,8 @@
         CONTRACT_INIT = 'contract'
 
         NUMBER = 'regexp:[0-9]+'
-        STRING = 'regexp:["][a-zA-Z0-9_]*["]]'
+        STRING = 'regexp:["][a-zA-Z0-9_]*["]'
+        BASE_STRING = "regexp:['][a-zA-Z0-9_]*[']"
         IDENTIFIER = 'regexp:[a-zA-Z_][a-zA-Z0-9_]*'
 
         WHITE_SPACE = 'regexp:\s+'
@@ -74,23 +75,27 @@ SimpleFile ::= Contract
 
 BooleanType ::= BOOLEAN_TRUE | BOOLEAN_FALSE
 
-Base58Str ::= BASE58_STR"'"STRING"'"
-
-Base16Str ::= Base16_STR"'"STRING"'"
-
 MathOp ::= ADD | SUB | POW | MULT | DIV | MOD
 
 ComprOp ::= GT | LT | EQ | GtE | LtE | NotEq
 
-FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (':' Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+BASE58_STR ::= base58init BASE_STRING
 
-STMT ::= NUMBER | STRING | BooleanType | IDENTIFIER
+BASE16_STR ::= base16init BASE_STRING
 
-VariableDefinition ::= VAR_DEF IDENTIFIER EQU STMT
+private base58init ::= base58
+
+private base16init ::= base16
+
+FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (COLON Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+
+STMT ::= BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | IDENTIFIER
+
+VariableDefinition ::= VAR_DEF IDENTIFIER (COLON Type)? EQU STMT
 
 Type ::= ANY_TYPE | UNIT_TYPE | BOOL_TYPE | INT_TYPE | BYTE_TYPE | STRING_TYPE // add collections
 
-ArgsList ::= IDENTIFIER (':' Type)? (',' ArgsList)?
+ArgsList ::= IDENTIFIER (COLON Type)? (',' ArgsList)?
 
 //exprs
 

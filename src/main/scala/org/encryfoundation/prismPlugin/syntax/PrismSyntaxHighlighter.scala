@@ -21,7 +21,7 @@ final case class PrismSyntaxHighlighter() extends SyntaxHighlighterBase {
 
   private val KEYWORDS = Sets.newHashSet(BOOLEAN_TRUE, ARITM_EXPR, BASE_16_STR, BASE_58_STR, BOOLEAN_TYPE,
     COMPR_EXPR, COMPR_OP, CONTRACT, EXPR, FUNCTION_DEFINITION, LAMB_EXPR, MATH_OP, RIGHT_ARITH_EXPR,
-    RIGHT_COMPR_EXPR, TYPE, VARIABLE_DEFINITION, ADD, ANY_TYPE, BASE16_STR, BASE58_STR, BOOL_TYPE, BOOLEAN_FALSE,
+    RIGHT_COMPR_EXPR, TYPE, VARIABLE_DEFINITION, ADD, ANY_TYPE, BOOL_TYPE, BOOLEAN_FALSE,
     BOOLEAN_TRUE, BYTE_TYPE, CONTRACT_INIT, DEF, DIV, EQ, GT, GTE, IDENTIFIER, INT_TYPE, LAMB_DEF, LT, LTE,
     MOD, MULT, NOTEQ, NUMBER, POW, STRING, SUB, UNIT_TYPE, VAR_DEF, LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET,
     LEFT_CURLY_BRACKET, RIGHT_CURLY_BRACKET, EQU)
@@ -34,7 +34,7 @@ final case class PrismSyntaxHighlighter() extends SyntaxHighlighterBase {
     case TokenType.BAD_CHARACTER =>
       println("illigal")
       Array(PrismSyntaxHighlighter.ILLEGAL)
-    case PrismTypes.STRING =>
+    case PrismTypes.STRING | PrismTypes.BASE_16_STR | PrismTypes.BASE_58_STR =>
       println("string")
       Array(PrismSyntaxHighlighter.STRING)
     case PrismTypes.IDENTIFIER =>

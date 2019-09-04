@@ -28,8 +28,9 @@ public interface PrismTypes {
 
   IElementType ADD = new PrismTokenType("+");
   IElementType ANY_TYPE = new PrismTokenType("Any");
-  IElementType BASE16_STR = new PrismTokenType("Base16_STR");
-  IElementType BASE58_STR = new PrismTokenType("base58");
+  IElementType BASE16 = new PrismTokenType("base16");
+  IElementType BASE58 = new PrismTokenType("base58");
+  IElementType BASE_STRING = new PrismTokenType("BASE_STRING");
   IElementType BOOLEAN_FALSE = new PrismTokenType("false");
   IElementType BOOLEAN_TRUE = new PrismTokenType("true");
   IElementType BOOL_TYPE = new PrismTokenType("Bool");
@@ -38,6 +39,7 @@ public interface PrismTypes {
   IElementType CONTRACT_INIT = new PrismTokenType("contract");
   IElementType DEF = new PrismTokenType("def");
   IElementType DIV = new PrismTokenType("/");
+  IElementType DOUBLE_QUOTES = new PrismTokenType("\"");
   IElementType EQ = new PrismTokenType("==");
   IElementType EQU = new PrismTokenType("=");
   IElementType GT = new PrismTokenType(">");
@@ -56,6 +58,7 @@ public interface PrismTypes {
   IElementType POW = new PrismTokenType("**");
   IElementType RIGHT_CURLY_BRACKET = new PrismTokenType("}");
   IElementType RIGHT_ROUND_BRACKET = new PrismTokenType(")");
+  IElementType SINGLE_QUOTE = new PrismTokenType("'");
   IElementType STRING = new PrismTokenType("STRING");
   IElementType STRING_TYPE = new PrismTokenType("Sting");
   IElementType SUB = new PrismTokenType("-");
