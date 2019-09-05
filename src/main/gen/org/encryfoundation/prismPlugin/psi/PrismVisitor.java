@@ -83,6 +83,10 @@ public class PrismVisitor extends PsiElementVisitor {
   }
 
   public void visitVariableDefinition(@NotNull PrismVariableDefinition o) {
+    visitNamedElement(o);
+  }
+
+  public void visitNamedElement(@NotNull PrismNamedElement o) {
     visitCompositeElement(o);
   }
 

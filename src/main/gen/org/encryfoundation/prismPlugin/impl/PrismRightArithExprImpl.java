@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
-import org.encryfoundation.prismPlugin.psi.PrismCompositeElementType;
+import org.encryfoundation.prismPlugin.psi.PrismCompositeElementImpl;
 import org.encryfoundation.prismPlugin.psi.*;
 
-public class PrismRightArithExprImpl extends PrismCompositeElementType implements PrismRightArithExpr {
+public class PrismRightArithExprImpl extends PrismCompositeElementImpl implements PrismRightArithExpr {
 
   public PrismRightArithExprImpl(ASTNode node) {
     super(node);

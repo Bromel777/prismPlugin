@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismVariableDefinition extends PrismCompositeElement {
+public interface PrismVariableDefinition extends PrismNamedElement {
 
   @Nullable
   PrismFuncCallExpr getFuncCallExpr();

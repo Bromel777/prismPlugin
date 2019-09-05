@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
-import org.encryfoundation.prismPlugin.psi.PrismCompositeElementType;
+import org.encryfoundation.prismPlugin.psi.PrismCompositeElementImpl;
 import org.encryfoundation.prismPlugin.psi.*;
 
-public class PrismComprOpImpl extends PrismCompositeElementType implements PrismComprOp {
+public class PrismComprOpImpl extends PrismCompositeElementImpl implements PrismComprOp {
 
   public PrismComprOpImpl(ASTNode node) {
     super(node);

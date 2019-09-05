@@ -2,7 +2,7 @@
   parserClass="org.encryfoundation.prismPlugin.GeneratedParser"
 
   implements = "org.encryfoundation.prismPlugin.psi.PrismCompositeElement"
-  extends="org.encryfoundation.prismPlugin.psi.PrismCompositeElementType"
+  extends="org.encryfoundation.prismPlugin.psi.PrismCompositeElementImpl"
 
   psiClassPrefix="Prism"
   psiImplClassSuffix="Impl"
@@ -12,6 +12,8 @@
   elementTypeHolderClass="org.encryfoundation.prismPlugin.psi.PrismTypes"
   elementTypeClass="org.encryfoundation.prismPlugin.psi.PrismCompositeElementType"
   tokenTypeClass="org.encryfoundation.prismPlugin.psi.PrismTokenType"
+
+  psiImplUtilClass="org.encryfoundation.prismPlugin.psi.ResolveUtil"
 
   tokens = [
 
@@ -77,6 +79,9 @@
 
         WHITE_SPACE = 'regexp:\s+'
     ]
+
+    implements("VariableDefinition")="org.encryfoundation.prismPlugin.psi.PrismNamedElement"
+    extends("VariableDefinition")="org.encryfoundation.prismPlugin.psi.PrismNamedElementImpl"
 }
 
 

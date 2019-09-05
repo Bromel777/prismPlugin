@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
-import org.encryfoundation.prismPlugin.psi.PrismCompositeElementType;
+import org.encryfoundation.prismPlugin.psi.PrismNamedElementImpl;
 import org.encryfoundation.prismPlugin.psi.*;
 
-public class PrismVariableDefinitionImpl extends PrismCompositeElementType implements PrismVariableDefinition {
+public class PrismVariableDefinitionImpl extends PrismNamedElementImpl implements PrismVariableDefinition {
 
   public PrismVariableDefinitionImpl(ASTNode node) {
     super(node);

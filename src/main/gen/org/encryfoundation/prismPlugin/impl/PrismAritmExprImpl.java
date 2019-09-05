@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
-import org.encryfoundation.prismPlugin.psi.PrismCompositeElementType;
+import org.encryfoundation.prismPlugin.psi.PrismCompositeElementImpl;
 import org.encryfoundation.prismPlugin.psi.*;
 
-public class PrismAritmExprImpl extends PrismCompositeElementType implements PrismAritmExpr {
+public class PrismAritmExprImpl extends PrismCompositeElementImpl implements PrismAritmExpr {
 
   public PrismAritmExprImpl(ASTNode node) {
     super(node);
