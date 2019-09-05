@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.encryfoundation.prismPlugin.psi.PrismCompositeElementType;
 import org.encryfoundation.prismPlugin.psi.*;
 
-public class PrismExprImpl extends ASTWrapperPsiElement implements PrismExpr {
+public class PrismExprImpl extends PrismCompositeElementType implements PrismExpr {
 
-  public PrismExprImpl(@NotNull ASTNode node) {
+  public PrismExprImpl(ASTNode node) {
     super(node);
   }
 
@@ -34,14 +34,26 @@ public class PrismExprImpl extends ASTWrapperPsiElement implements PrismExpr {
 
   @Override
   @Nullable
-  public PrismComprExpr getComprExpr() {
-    return findChildByClass(PrismComprExpr.class);
+  public PrismBoolExpr getBoolExpr() {
+    return findChildByClass(PrismBoolExpr.class);
   }
 
   @Override
   @Nullable
   public PrismFunctionDefinition getFunctionDefinition() {
     return findChildByClass(PrismFunctionDefinition.class);
+  }
+
+  @Override
+  @Nullable
+  public PrismIfExpr getIfExpr() {
+    return findChildByClass(PrismIfExpr.class);
+  }
+
+  @Override
+  @Nullable
+  public PrismIfLetExpr getIfLetExpr() {
+    return findChildByClass(PrismIfLetExpr.class);
   }
 
   @Override

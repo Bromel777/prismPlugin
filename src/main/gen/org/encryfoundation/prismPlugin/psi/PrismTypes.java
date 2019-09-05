@@ -8,25 +8,29 @@ import org.encryfoundation.prismPlugin.impl.*;
 
 public interface PrismTypes {
 
-  IElementType ARGS_LIST = new PrismElementType("ARGS_LIST");
-  IElementType ARITM_EXPR = new PrismElementType("ARITM_EXPR");
-  IElementType BASE_16_STR = new PrismElementType("BASE_16_STR");
-  IElementType BASE_58_STR = new PrismElementType("BASE_58_STR");
-  IElementType BOOLEAN_TYPE = new PrismElementType("BOOLEAN_TYPE");
-  IElementType COMPR_EXPR = new PrismElementType("COMPR_EXPR");
-  IElementType COMPR_OP = new PrismElementType("COMPR_OP");
-  IElementType CONTRACT = new PrismElementType("CONTRACT");
-  IElementType EXPR = new PrismElementType("EXPR");
-  IElementType FUNCTION_DEFINITION = new PrismElementType("FUNCTION_DEFINITION");
-  IElementType LAMB_EXPR = new PrismElementType("LAMB_EXPR");
-  IElementType MATH_OP = new PrismElementType("MATH_OP");
-  IElementType RIGHT_ARITH_EXPR = new PrismElementType("RIGHT_ARITH_EXPR");
-  IElementType RIGHT_COMPR_EXPR = new PrismElementType("RIGHT_COMPR_EXPR");
-  IElementType STMT = new PrismElementType("STMT");
-  IElementType TYPE = new PrismElementType("TYPE");
-  IElementType VARIABLE_DEFINITION = new PrismElementType("VARIABLE_DEFINITION");
+  IElementType ARGS_LIST = new PrismCompositeElementType("ARGS_LIST");
+  IElementType ARITM_EXPR = new PrismCompositeElementType("ARITM_EXPR");
+  IElementType BASE_16_STR = new PrismCompositeElementType("BASE_16_STR");
+  IElementType BASE_58_STR = new PrismCompositeElementType("BASE_58_STR");
+  IElementType BOOLEAN_TYPE = new PrismCompositeElementType("BOOLEAN_TYPE");
+  IElementType BOOL_EXPR = new PrismCompositeElementType("BOOL_EXPR");
+  IElementType COMPR_OP = new PrismCompositeElementType("COMPR_OP");
+  IElementType CONTRACT = new PrismCompositeElementType("CONTRACT");
+  IElementType EXPR = new PrismCompositeElementType("EXPR");
+  IElementType FUNCTION_DEFINITION = new PrismCompositeElementType("FUNCTION_DEFINITION");
+  IElementType FUNC_CALL_EXPR = new PrismCompositeElementType("FUNC_CALL_EXPR");
+  IElementType IF_EXPR = new PrismCompositeElementType("IF_EXPR");
+  IElementType IF_LET_EXPR = new PrismCompositeElementType("IF_LET_EXPR");
+  IElementType LAMB_EXPR = new PrismCompositeElementType("LAMB_EXPR");
+  IElementType MATH_OP = new PrismCompositeElementType("MATH_OP");
+  IElementType RIGHT_ARITH_EXPR = new PrismCompositeElementType("RIGHT_ARITH_EXPR");
+  IElementType RIGHT_BOOL_EXPR = new PrismCompositeElementType("RIGHT_BOOL_EXPR");
+  IElementType STMT = new PrismCompositeElementType("STMT");
+  IElementType TYPE = new PrismCompositeElementType("TYPE");
+  IElementType VARIABLE_DEFINITION = new PrismCompositeElementType("VARIABLE_DEFINITION");
 
   IElementType ADD = new PrismTokenType("+");
+  IElementType AND = new PrismTokenType("&&");
   IElementType ANY_TYPE = new PrismTokenType("Any");
   IElementType BASE16 = new PrismTokenType("base16");
   IElementType BASE58 = new PrismTokenType("base58");
@@ -40,21 +44,25 @@ public interface PrismTypes {
   IElementType DEF = new PrismTokenType("def");
   IElementType DIV = new PrismTokenType("/");
   IElementType DOUBLE_QUOTES = new PrismTokenType("\"");
+  IElementType ELSE = new PrismTokenType("else");
   IElementType EQ = new PrismTokenType("==");
   IElementType EQU = new PrismTokenType("=");
   IElementType GT = new PrismTokenType(">");
   IElementType GTE = new PrismTokenType(">=");
   IElementType IDENTIFIER = new PrismTokenType("IDENTIFIER");
+  IElementType IF = new PrismTokenType("if");
   IElementType INT_TYPE = new PrismTokenType("Int");
-  IElementType LAMB_DEF = new PrismTokenType("lamb");
+  IElementType LAMB = new PrismTokenType("lamb");
   IElementType LEFT_CURLY_BRACKET = new PrismTokenType("{");
   IElementType LEFT_ROUND_BRACKET = new PrismTokenType("(");
+  IElementType LET = new PrismTokenType("let");
   IElementType LT = new PrismTokenType("<");
   IElementType LTE = new PrismTokenType("<=");
   IElementType MOD = new PrismTokenType("%");
   IElementType MULT = new PrismTokenType("*");
   IElementType NOTEQ = new PrismTokenType("<>");
   IElementType NUMBER = new PrismTokenType("NUMBER");
+  IElementType OR = new PrismTokenType("||");
   IElementType POW = new PrismTokenType("**");
   IElementType RIGHT_CURLY_BRACKET = new PrismTokenType("}");
   IElementType RIGHT_ROUND_BRACKET = new PrismTokenType(")");
@@ -63,7 +71,6 @@ public interface PrismTypes {
   IElementType STRING_TYPE = new PrismTokenType("Sting");
   IElementType SUB = new PrismTokenType("-");
   IElementType UNIT_TYPE = new PrismTokenType("Unit");
-  IElementType VAR_DEF = new PrismTokenType("let");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -83,8 +90,8 @@ public interface PrismTypes {
       else if (type == BOOLEAN_TYPE) {
         return new PrismBooleanTypeImpl(node);
       }
-      else if (type == COMPR_EXPR) {
-        return new PrismComprExprImpl(node);
+      else if (type == BOOL_EXPR) {
+        return new PrismBoolExprImpl(node);
       }
       else if (type == COMPR_OP) {
         return new PrismComprOpImpl(node);
@@ -98,6 +105,15 @@ public interface PrismTypes {
       else if (type == FUNCTION_DEFINITION) {
         return new PrismFunctionDefinitionImpl(node);
       }
+      else if (type == FUNC_CALL_EXPR) {
+        return new PrismFuncCallExprImpl(node);
+      }
+      else if (type == IF_EXPR) {
+        return new PrismIfExprImpl(node);
+      }
+      else if (type == IF_LET_EXPR) {
+        return new PrismIfLetExprImpl(node);
+      }
       else if (type == LAMB_EXPR) {
         return new PrismLambExprImpl(node);
       }
@@ -107,8 +123,8 @@ public interface PrismTypes {
       else if (type == RIGHT_ARITH_EXPR) {
         return new PrismRightArithExprImpl(node);
       }
-      else if (type == RIGHT_COMPR_EXPR) {
-        return new PrismRightComprExprImpl(node);
+      else if (type == RIGHT_BOOL_EXPR) {
+        return new PrismRightBoolExprImpl(node);
       }
       else if (type == STMT) {
         return new PrismStmtImpl(node);

@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismFunctionDefinition extends PsiElement {
+public interface PrismFunctionDefinition extends PrismCompositeElement {
 
   @Nullable
   PrismArgsList getArgsList();

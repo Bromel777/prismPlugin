@@ -3,79 +3,90 @@ package org.encryfoundation.prismPlugin.psi;
 
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiElement;
 
 public class PrismVisitor extends PsiElementVisitor {
 
   public void visitArgsList(@NotNull PrismArgsList o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitAritmExpr(@NotNull PrismAritmExpr o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitBase16Str(@NotNull PrismBase16Str o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitBase58Str(@NotNull PrismBase58Str o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
+  }
+
+  public void visitBoolExpr(@NotNull PrismBoolExpr o) {
+    visitCompositeElement(o);
   }
 
   public void visitBooleanType(@NotNull PrismBooleanType o) {
-    visitPsiElement(o);
-  }
-
-  public void visitComprExpr(@NotNull PrismComprExpr o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitComprOp(@NotNull PrismComprOp o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitContract(@NotNull PrismContract o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitExpr(@NotNull PrismExpr o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
+  }
+
+  public void visitFuncCallExpr(@NotNull PrismFuncCallExpr o) {
+    visitCompositeElement(o);
   }
 
   public void visitFunctionDefinition(@NotNull PrismFunctionDefinition o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
+  }
+
+  public void visitIfExpr(@NotNull PrismIfExpr o) {
+    visitCompositeElement(o);
+  }
+
+  public void visitIfLetExpr(@NotNull PrismIfLetExpr o) {
+    visitCompositeElement(o);
   }
 
   public void visitLambExpr(@NotNull PrismLambExpr o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitMathOp(@NotNull PrismMathOp o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitRightArithExpr(@NotNull PrismRightArithExpr o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
-  public void visitRightComprExpr(@NotNull PrismRightComprExpr o) {
-    visitPsiElement(o);
+  public void visitRightBoolExpr(@NotNull PrismRightBoolExpr o) {
+    visitCompositeElement(o);
   }
 
   public void visitStmt(@NotNull PrismStmt o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitType(@NotNull PrismType o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
   public void visitVariableDefinition(@NotNull PrismVariableDefinition o) {
-    visitPsiElement(o);
+    visitCompositeElement(o);
   }
 
-  public void visitPsiElement(@NotNull PsiElement o) {
+  public void visitCompositeElement(@NotNull PrismCompositeElement o) {
     visitElement(o);
   }
 

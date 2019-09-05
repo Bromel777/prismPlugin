@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import org.encryfoundation.prismPlugin.psi.PrismCompositeElementType;
 import org.encryfoundation.prismPlugin.psi.*;
 
-public class PrismArgsListImpl extends ASTWrapperPsiElement implements PrismArgsList {
+public class PrismArgsListImpl extends PrismCompositeElementType implements PrismArgsList {
 
-  public PrismArgsListImpl(@NotNull ASTNode node) {
+  public PrismArgsListImpl(ASTNode node) {
     super(node);
   }
 

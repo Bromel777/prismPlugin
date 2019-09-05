@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismAritmExpr extends PsiElement {
+public interface PrismAritmExpr extends PrismCompositeElement {
 
   @NotNull
   PrismRightArithExpr getRightArithExpr();

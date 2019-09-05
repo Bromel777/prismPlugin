@@ -1,7 +1,8 @@
 {
   parserClass="org.encryfoundation.prismPlugin.GeneratedParser"
 
-  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  implements = "org.encryfoundation.prismPlugin.psi.PrismCompositeElement"
+  extends="org.encryfoundation.prismPlugin.psi.PrismCompositeElementType"
 
   psiClassPrefix="Prism"
   psiImplClassSuffix="Impl"
@@ -9,7 +10,7 @@
   psiImplPackage="org.encryfoundation.prismPlugin.impl"
 
   elementTypeHolderClass="org.encryfoundation.prismPlugin.psi.PrismTypes"
-  elementTypeClass="org.encryfoundation.prismPlugin.psi.PrismElementType"
+  elementTypeClass="org.encryfoundation.prismPlugin.psi.PrismCompositeElementType"
   tokenTypeClass="org.encryfoundation.prismPlugin.psi.PrismTokenType"
 
   tokens = [
@@ -25,6 +26,11 @@
         GtE = '>='
         LtE = '<='
         NotEq = '<>'
+
+        //bool and, or
+
+        AND = '&&'
+        OR = '||'
 
         //math
         ADD = '+'
@@ -56,8 +62,11 @@
         DOUBLE_QUOTES = '"'
         SINGLE_QUOTE = "'"
 
-        LAMB_DEF = 'lamb'
-        VAR_DEF = 'let'
+        LAMB = 'lamb'
+        LET = 'let'
+
+        IF = 'if'
+        ELSE = 'else'
 
         CONTRACT_INIT = 'contract'
 
@@ -77,7 +86,7 @@ BooleanType ::= BOOLEAN_TRUE | BOOLEAN_FALSE
 
 MathOp ::= ADD | SUB | POW | MULT | DIV | MOD
 
-ComprOp ::= GT | LT | EQ | GtE | LtE | NotEq
+ComprOp ::= AND | OR | GtE | LtE | NotEq | GT | LT | EQ
 
 BASE58_STR ::= base58init BASE_STRING
 
@@ -91,7 +100,7 @@ FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_B
 
 STMT ::= BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | IDENTIFIER
 
-VariableDefinition ::= VAR_DEF IDENTIFIER (COLON Type)? EQU STMT
+VariableDefinition ::= LET IDENTIFIER (COLON Type)? EQU (FuncCallExpr | STMT)
 
 Type ::= ANY_TYPE | UNIT_TYPE | BOOL_TYPE | INT_TYPE | BYTE_TYPE | STRING_TYPE // add collections
 
@@ -107,17 +116,39 @@ ArgsList ::= IDENTIFIER (COLON Type)? (',' ArgsList)?
 
 //compr
 
-    RightComprExpr ::= ComprOp (BooleanType | IDENTIFIER) (RightComprExpr)?
+    RightBoolExpr ::= ComprOp (BooleanType | FuncCallExpr| IDENTIFIER | STMT) (RightBoolExpr)?
 
-    ComprExpr ::= (BooleanType | IDENTIFIER) RightComprExpr?
+    BoolExpr ::= (BooleanType | FuncCallExpr | IDENTIFIER | STMT) RightBoolExpr?
 
 //lamb def
 
-    LambExpr ::= LAMB_DEF LEFT_ROUND_BRACKET ArgsList RIGHT_ROUND_BRACKET EQU Expr
+    LambExpr ::= LAMB LEFT_ROUND_BRACKET ArgsList RIGHT_ROUND_BRACKET EQU Expr
+
+// if expr
+
+    IfExpr ::= IF LEFT_ROUND_BRACKET BoolExpr RIGHT_ROUND_BRACKET LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
+               ELSE LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
+
+// if let expr
+
+    IfLetExpr ::= IF LEFT_ROUND_BRACKET VariableDefinition RIGHT_ROUND_BRACKET LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
+                  ELSE LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
+
+// func call
+
+    FuncCallExpr ::= IDENTIFIER LEFT_ROUND_BRACKET identifiers_list RIGHT_ROUND_BRACKET
+
+    private identifiers_list ::= IDENTIFIER ("," identifiers_list)?
 
 // global expr
 
-    Expr ::= AritmExpr | ComprExpr | LambExpr | FunctionDefinition | VariableDefinition
+    Expr ::= AritmExpr
+    | BoolExpr
+    | LambExpr
+    | FunctionDefinition
+    | VariableDefinition
+    | IfExpr
+    | IfLetExpr
 
 //Contract
 

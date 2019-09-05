@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismBase16Str extends PsiElement {
+public interface PrismBase16Str extends PrismCompositeElement {
 
   @NotNull
   PsiElement getBaseString();

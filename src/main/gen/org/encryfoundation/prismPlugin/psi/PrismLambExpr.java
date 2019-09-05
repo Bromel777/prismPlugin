@@ -5,7 +5,7 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismLambExpr extends PsiElement {
+public interface PrismLambExpr extends PrismCompositeElement {
 
   @NotNull
   PrismArgsList getArgsList();

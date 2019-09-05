@@ -43,6 +43,8 @@ WHITE_SPACE=[ \t\n\x0B\f\r]+
   ">="               { return GTE; }
   "<="               { return LTE; }
   "<>"               { return NOTEQ; }
+  "&&"               { return AND; }
+  "||"               { return OR; }
   "+"                { return ADD; }
   "-"                { return SUB; }
   "**"               { return POW; }
@@ -63,8 +65,10 @@ WHITE_SPACE=[ \t\n\x0B\f\r]+
   ":"                { return COLON; }
   "\""               { return DOUBLE_QUOTES; }
   "'"                { return SINGLE_QUOTE; }
-  "lamb"             { return LAMB_DEF; }
-  "let"              { return VAR_DEF; }
+  "lamb"             { return LAMB; }
+  "let"              { return LET; }
+  "if"               { return IF; }
+  "else"             { return ELSE; }
   "contract"         { return CONTRACT_INIT; }
   "base58"           { return BASE58; }
   "base16"           { return BASE16; }
