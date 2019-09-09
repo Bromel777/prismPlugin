@@ -13,7 +13,7 @@
   elementTypeClass="org.encryfoundation.prismPlugin.psi.PrismCompositeElementType"
   tokenTypeClass="org.encryfoundation.prismPlugin.psi.PrismTokenType"
 
-  psiImplUtilClass="org.encryfoundation.prismPlugin.psi.ResolveUtil"
+  psiImplUtilClass="org.encryfoundation.prismPlugin.psi.PrismPsiUtilImpl"
 
   tokens = [
 
@@ -105,7 +105,10 @@ FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_B
 
 STMT ::= BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | IDENTIFIER
 
-VariableDefinition ::= LET IDENTIFIER (COLON Type)? EQU (FuncCallExpr | STMT)
+VariableDefinition ::= LET IDENTIFIER (COLON Type)? EQU (FuncCallExpr | STMT) {
+
+    methods = [getNameIdentifier getReference]
+}
 
 Type ::= ANY_TYPE | UNIT_TYPE | BOOL_TYPE | INT_TYPE | BYTE_TYPE | STRING_TYPE // add collections
 

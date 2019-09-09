@@ -4,6 +4,7 @@ package org.encryfoundation.prismPlugin.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 
 public interface PrismVariableDefinition extends PrismNamedElement {
 
@@ -18,5 +19,9 @@ public interface PrismVariableDefinition extends PrismNamedElement {
 
   @NotNull
   PsiElement getIdentifier();
+
+  PsiElement getNameIdentifier();
+
+  PsiReference getReference();
 
 }

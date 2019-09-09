@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
 import org.encryfoundation.prismPlugin.psi.PrismNamedElementImpl;
 import org.encryfoundation.prismPlugin.psi.*;
+import com.intellij.psi.PsiReference;
 
 public class PrismVariableDefinitionImpl extends PrismNamedElementImpl implements PrismVariableDefinition {
 
@@ -48,6 +49,16 @@ public class PrismVariableDefinitionImpl extends PrismNamedElementImpl implement
   @NotNull
   public PsiElement getIdentifier() {
     return findNotNullChildByType(IDENTIFIER);
+  }
+
+  @Override
+  public PsiElement getNameIdentifier() {
+    return PrismPsiUtilImpl.getNameIdentifier(this);
+  }
+
+  @Override
+  public PsiReference getReference() {
+    return PrismPsiUtilImpl.getReference(this);
   }
 
 }
