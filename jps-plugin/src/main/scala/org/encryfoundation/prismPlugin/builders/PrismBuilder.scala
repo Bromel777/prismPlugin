@@ -2,18 +2,21 @@ package org.encryfoundation.prismPlugin.builders
 
 import java.io.File
 import java.nio.charset.Charset
+import java.util.concurrent.ExecutionException
+import java.util.regex.Pattern
 
 import com.intellij.execution.configurations.GeneralCommandLine
-import com.intellij.execution.process.{BaseOSProcessHandler, ProcessEvent, ProcessListener}
+import com.intellij.execution.process.{BaseOSProcessHandler, ProcessAdapter, ProcessEvent, ProcessListener}
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.io.FileUtil
 import org.encryfoundation.prismPlugin.jps.PrismJpsInterface
 import org.encryfoundation.prismPlugin.model.JpsPrismModuleType
 import org.encryfoundation.prismPlugin.target.{PrismBuildRootDescriptor, PrismBuildTarget, PrismBuildTargetType}
+import org.jetbrains.annotations.NotNull
 import org.jetbrains.jps.builders.{BuildOutputConsumer, DirtyFilesHolder}
 import org.jetbrains.jps.incremental.messages.{BuildMessage, CompilerMessage, ProgressMessage}
 import org.jetbrains.jps.incremental.resources.{ResourcesBuilder, StandardResourceBuilderEnabler}
-import org.jetbrains.jps.incremental.{CompileContext, TargetBuilder}
+import org.jetbrains.jps.incremental.{CompileContext, ProjectBuildException, TargetBuilder}
 import org.jetbrains.jps.model.java.JpsJavaExtensionService
 import org.jetbrains.jps.model.module.JpsModule
 
@@ -21,6 +24,10 @@ import scala.collection.JavaConverters._
 
 class PrismBuilder() extends
   TargetBuilder[PrismBuildRootDescriptor, PrismBuildTarget](List(PrismBuildTargetType.instance).asJava){
+
+  val message = new CompilerMessage("Prism compiler", BuildMessage.Kind.ERROR, "Test Error")
+
+  val error = new PrismError
 
   ResourcesBuilder.registerEnabler(new StandardResourceBuilderEnabler {
     override def isResourceProcessingEnabled(module: JpsModule): Boolean = {
@@ -50,6 +57,7 @@ class PrismBuilder() extends
   def runPrismC(module: JpsModule,
                 outputDirectory: File,
                 compileContext: CompileContext): Unit = {
+    println("runPris")
     val jpsInter = PrismJpsInterface(module, compileContext)
     val commandLine = jpsInter.buildCommandLine
     val fileToCompile = new File(
@@ -59,13 +67,15 @@ class PrismBuilder() extends
       .head
     println(fileToCompile.getAbsoluteFile)
     commandLine.addParameter(fileToCompile.getAbsolutePath)
+    val process: ProcessListener = PrismCProcessListener(compileContext, "prismc", "")
+    System.out.println("proccess" + ":" + process)
     println(s"command: ${commandLine.getCommandLineString}")
     val handler = new BaseOSProcessHandler(
       commandLine.createProcess(),
       commandLine.getCommandLineString,
       Charset.defaultCharset()
     )
-    handler.addProcessListener(PrismCProcessListener())
+    handler.addProcessListener(process)
     handler.startNotify()
     handler.waitFor()
   }
@@ -97,7 +107,15 @@ class PrismBuilder() extends
     else ""
   }
 
-  case class PrismCProcessListener() extends ProcessListener {
+
+  case class PrismCProcessListener(context: CompileContext,
+                                   builderName: String,
+                                   compileTargetRootPath: String) extends ProcessListener {
+
+     def showMessage(@NotNull message: CompilerMessage) = {
+      println("show message")
+      context.processMessage(message)
+    }
 
     var parsingState = "Start"
 
@@ -107,7 +125,13 @@ class PrismBuilder() extends
 
     override def processWillTerminate(event: ProcessEvent, willBeDestroyed: Boolean): Unit = ()
 
-    override def onTextAvailable(event: ProcessEvent, outputType: Key[_]): Unit = ()
+    override def onTextAvailable(@NotNull event: ProcessEvent,
+                                 @NotNull outputType: Key[_]) = {
+      println("onText: " + event.getText)
+      println("ot " + error.createCompilerMessage(builderName, compileTargetRootPath, event.getText))
+      showMessage(error.createCompilerMessage(builderName, compileTargetRootPath, event.getText))
+//      context.processMessage(message)
+    }
   }
 }
 
