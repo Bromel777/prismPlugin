@@ -152,12 +152,11 @@ ArgsList ::= IDENTIFIER (COLON Type)? (',' ArgsList)?
 
     Expr ::= AritmExpr
     | BoolExpr
-    | LambExpr
-    | FunctionDefinition
-    | VariableDefinition
     | IfExpr
     | IfLetExpr
 
+    Declr ::= VariableDefinition | FunctionDefinition | LambExpr
+
 //Contract
 
-    Contract ::= CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET Expr* RIGHT_CURLY_BRACKET
+    Contract ::= CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET (Expr | Declr)* RIGHT_CURLY_BRACKET

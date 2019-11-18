@@ -1,7 +1,7 @@
 package org.encryfoundation.prismPlugin.psi
 
 import com.intellij.lang.ASTNode
-import com.intellij.psi.PsiElement
+import com.intellij.psi.{PsiElement, PsiReference}
 
 abstract class PrismNamedElementImpl(node: ASTNode) extends PrismCompositeElementImpl(node) with PrismCompositeElement with PrismNamedElement {
 

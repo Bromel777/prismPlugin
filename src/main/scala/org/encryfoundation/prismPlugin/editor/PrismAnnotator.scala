@@ -6,6 +6,6 @@ import com.intellij.psi.PsiElement
 class PrismAnnotator extends Annotator {
 
   override def annotate(element: PsiElement, holder: AnnotationHolder): Unit = {
-    println(s"Annotator: ${element.getNode} | ${holder}")
+    //println(s"Annotator: ${element.getNode} | ${holder}")
   }
 }

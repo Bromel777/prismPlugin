@@ -12,12 +12,13 @@ object ResolveUtil {
   def treeWalkUp(place: PsiElement, processor: PsiScopeProcessor): Boolean = {
     var lastParent = Option.empty[PsiElement]
     var run = place
-    while (run != null) {
-      if ((place ne run) && !run.processDeclarations(processor, ResolveState.initial, lastParent.orNull, place)) return false
+    var flag = true
+    while (run != null && flag) {
+      if ((place ne run) && !run.processDeclarations(processor, ResolveState.initial, lastParent.orNull, place)) flag = false
       lastParent = Some(run)
       run = run.getParent
     }
-    true
+    flag
   }
 
   def processChildren(element: PsiElement,
@@ -27,12 +28,13 @@ object ResolveUtil {
                       place: PsiElement): Boolean = {
     var run = if (lastParent == null) element.getLastChild
     else lastParent.getPrevSibling
+    var flag = true
     while ( {
-      run != null
+      run != null && flag
     }) {
-      if (run.isInstanceOf[PrismCompositeElement] && !run.processDeclarations(processor, substitutor, null, place)) return false
+      if (run.isInstanceOf[PrismCompositeElement] && !run.processDeclarations(processor, substitutor, null, place)) flag = false
       run = run.getPrevSibling
     }
-    true
+    flag
   }
 }

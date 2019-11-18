@@ -35,27 +35,27 @@ final case class PrismSyntaxHighlighter() extends SyntaxHighlighterBase {
       println("illigal")
       Array(PrismSyntaxHighlighter.ILLEGAL)
     case PrismTypes.STRING | PrismTypes.BASE_16_STR | PrismTypes.BASE_58_STR =>
-      println("string")
+      //println("string")
       Array(PrismSyntaxHighlighter.STRING)
     case PrismTypes.IDENTIFIER =>
-      println("id")
+      //println("id")
       Array(PrismSyntaxHighlighter.ID)
     case DEF => Array(PrismSyntaxHighlighter.FUNC_DEF)
     case LEFT_CURLY_BRACKET | RIGHT_CURLY_BRACKET | LEFT_CURLY_BRACKET | RIGHT_CURLY_BRACKET =>
-      println("bracket")
+      //println("bracket")
       Array(PrismSyntaxHighlighter.BRACKETS)
     case type_word if types.contains(type_word) =>
-      println("type")
+      //println("type")
       Array(PrismSyntaxHighlighter.TYPE_ATTR)
     case EQU => Array(PrismSyntaxHighlighter.EQU_ATTR)
     case keyword if KEYWORDS.contains(keyword) =>
-      println(s"keyword: ${keyword}")
+      //println(s"keyword: ${keyword}")
       Array(PrismSyntaxHighlighter.KEYWORD)
     case PrismTypes.INT_TYPE =>
-      println("int")
+      //println("int")
       Array(PrismSyntaxHighlighter.NUMBER)
     case t =>
-      println(s"empty!!! $t")
+      //println(s"empty!!! $t")
       PrismSyntaxHighlighter.EMPTY
   }
 }
