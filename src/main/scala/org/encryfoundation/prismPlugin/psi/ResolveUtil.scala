@@ -26,8 +26,8 @@ object ResolveUtil {
                       substitutor: ResolveState,
                       lastParent: PsiElement,
                       place: PsiElement): Boolean = {
-    var run = if (lastParent == null) element.getLastChild
-    else lastParent.getPrevSibling
+    var run = if (element.getLastChild != null) element.getLastChild else if (lastParent != null) lastParent.getNextSibling else null
+
     var flag = true
     while ( {
       run != null && flag

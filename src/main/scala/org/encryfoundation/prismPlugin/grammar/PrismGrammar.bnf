@@ -101,11 +101,11 @@ private base58init ::= base58
 
 private base16init ::= base16
 
-FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (COLON Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (COLON Type)? EQU LEFT_CURLY_BRACKET (ExprWODeclr | VariableDefinition)* RIGHT_CURLY_BRACKET
 
 STMT ::= BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | IDENTIFIER
 
-VariableDefinition ::= LET IDENTIFIER (COLON Type)? EQU (FuncCallExpr | STMT) {
+VariableDefinition ::= LET IDENTIFIER (COLON Type)? EQU (ExprWODeclr | FuncCallExpr | STMT) {
 
     methods = [getNameIdentifier getReference]
 }
@@ -150,13 +150,17 @@ ArgsList ::= IDENTIFIER (COLON Type)? (',' ArgsList)?
 
 // global expr
 
-    Expr ::= AritmExpr
+    ExprWODeclr ::= AritmExpr
     | BoolExpr
+    | LambExpr
+    | FunctionDefinition
     | IfExpr
     | IfLetExpr
 
-    Declr ::= VariableDefinition | FunctionDefinition | LambExpr
+    //Expr ::= ExprWODeclr | VariableDefinition
+
+    //Declr ::= VariableDefinition | FunctionDefinition | LambExpr
 
 //Contract
 
-    Contract ::= CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET (Expr | Declr)* RIGHT_CURLY_BRACKET
+    Contract ::= CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET (ExprWODeclr | VariableDefinition)* RIGHT_CURLY_BRACKET
