@@ -5,26 +5,56 @@ import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.psi.tree.TokenSet
 import com.intellij.psi.{PsiElement, PsiReference, ResolveState}
 
+import scala.util.Try
+
 object PrismPsiUtilImpl {
 
   def getNameIdentifier(variable: PrismVariableDefinition): PsiElement = {
     variable.getIdentifier
   }
 
-  def getReference(variable: PrismVariableDefinition): PsiReference = {
-    val range =
-      if (variable.getStmt == null) null
-      else {
-        val identLength = variable.getText.reverse.trim.takeWhile(ch => ch != ' ' && ch != '=').length
-        TextRange.from(variable.getTextLength - identLength, identLength)
-      }
-    val r = PrismVariableReferenceImpl(variable, range)
-    println(r.getCanonicalText)
-    r
+  def getNameIdentifier(func: PrismFunctionDefinition): PsiElement = {
+    func.getIdentifier
   }
+
+  def getNameIdentifier(func: PrismReferencedIdentifier): PsiElement = {
+    func.getIdentifier
+  }
+
+  def getReference(call: PrismFuncCallExpr): PsiReference = {
+    val initOffset = call.getText.indexOf(call.getReferencedIdentifier.getIdentifier.getText)
+    PrismFunctionCallReferenceImpl(call, TextRange.from(initOffset, call.getReferencedIdentifier.getText.length))
+  }
+
+  def getReference(ident: PrismReferencedIdentifier): PsiReference = {
+    //val identLength = ident.getIdentifier.getText.reverse.trim.takeWhile(ch => ch != ' ' && ch != '=').length
+    val offset = ident.getParent.getText.indexOf(ident.getIdentifier.getText)
+    println(s"elem is ${ident.getText}, parent is ${ident.getParent.getText}")
+    PrismIdentReferenceImpl(ident, TextRange.from(0, ident.getIdentifier.getTextLength))
+  }
+
+//  def getReference(variable: PrismStmt): PsiReference = {
+//    //val range =
+//    if (Try(variable.getReferencedIdentifier.getIdentifier).isFailure) null
+//    else {
+//      val identLength = variable.getText.reverse.trim.takeWhile(ch => ch != ' ' && ch != '=').length
+//      //TextRange.from(variable.getTextLength - identLength, identLength)
+//      //println(variable.getExpr.getStmt.getIdentifier.getTextRange)
+//      //variable.getExpr.getStmt.getIdentifier.getTextRange
+//      TextRange.from(variable.getTextLength - identLength, identLength)
+//      PrismIdentReferenceImpl(variable.getReferencedIdentifier, TextRange.from(variable.getTextLength - identLength, identLength))
+//    }
+//    // PrismVariableReferenceImpl(variable, range)
+//  }
+
+//  def getReference(ref: PrismVariableReference): PsiReference = {
+//    PrismVariableCallReferenceImpl(ref, ref.getTextRange)
+//  }
 
   def processDeclarations(o: PrismNamedElement, processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement, place: PsiElement): Boolean =
     processor.execute(o, state)
+
+
 
   def getKey(element: PrismVariableDefinition): String = {
     val keyNode = element.getNode.findChildByType(PrismTypes.IDENTIFIER)
@@ -36,7 +66,7 @@ object PrismPsiUtilImpl {
   }
 
   def getValue(element: PrismVariableDefinition): String = {
-    val valueNode = element.getNode.findChildByType(TokenSet.create(PrismTypes.EXPR_WO_DECLR, PrismTypes.FUNC_CALL_EXPR, PrismTypes.STMT))
+    val valueNode = element.getNode.findChildByType(TokenSet.create(PrismTypes.EXPR, PrismTypes.FUNC_CALL_EXPR, PrismTypes.STMT))
 
     if (valueNode != null) valueNode.getText else null
   }

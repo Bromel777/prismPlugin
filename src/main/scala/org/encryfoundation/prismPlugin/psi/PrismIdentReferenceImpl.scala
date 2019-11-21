@@ -6,9 +6,10 @@ import com.intellij.psi.{PsiElement, PsiElementResolveResult, PsiReference, Reso
 import org.encryfoundation.prismPlugin.Icons
 
 import collection.JavaConverters._
+import scala.util.Try
 
-case class PrismVariableReferenceImpl(element: PrismVariableDefinition, range: TextRange)
-  extends PrismPsiPolyVariantCachingReferenceBase[PrismVariableDefinition](element: PrismVariableDefinition, range: TextRange) {
+case class PrismIdentReferenceImpl(element: PrismReferencedIdentifier, range: TextRange)
+  extends PrismPsiPolyVariantCachingReferenceBase[PrismReferencedIdentifier](element: PrismReferencedIdentifier, range: TextRange) {
 
   //println(element.getType)
   //println(element.getFuncCallExpr)
@@ -17,7 +18,7 @@ case class PrismVariableReferenceImpl(element: PrismVariableDefinition, range: T
   //println(element.getIdentifier.getText)
   //println(element.getNameIdentifier.getText)
 
-  val keyOpt: Option[String] = Option(element.getStmt).flatMap(stmt => Option(stmt.getIdentifier)).map(_.getText)
+  val keyOpt: Option[String] = Try(element.getIdentifier.getText).toOption
 
 //  override def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
 //    val processor = PrismVarProcessor(element.getText, element)
@@ -34,14 +35,11 @@ case class PrismVariableReferenceImpl(element: PrismVariableDefinition, range: T
 //  }
 
   override def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
-    println(element.getText)
     println(s"key $keyOpt")
-    val r = keyOpt match {
-      case Some(key) => PsiElementResolveResult.createResults(PrismUtil.findVariableDefinition(myElement.getProject, key): _*)
+    keyOpt match {
+      case Some(_) => PsiElementResolveResult.createResults(PrismUtil.findVariableDefinition(myElement.getProject, element): _*)
       case None => Array.empty[ResolveResult]
     }
-
-    r
   }
 
   override def resolve(): PsiElement = multiResolve(false).headOption.map(_.getElement).orNull
