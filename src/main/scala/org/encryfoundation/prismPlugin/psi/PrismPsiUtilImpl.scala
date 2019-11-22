@@ -29,7 +29,7 @@ object PrismPsiUtilImpl {
   def getReference(ident: PrismReferencedIdentifier): PsiReference = {
     //val identLength = ident.getIdentifier.getText.reverse.trim.takeWhile(ch => ch != ' ' && ch != '=').length
     val offset = ident.getParent.getText.indexOf(ident.getIdentifier.getText)
-    println(s"elem is ${ident.getText}, parent is ${ident.getParent.getText}")
+    //println(s"elem is ${ident.getText}, parent is ${ident.getParent.getText}")
     PrismIdentReferenceImpl(ident, TextRange.from(0, ident.getIdentifier.getTextLength))
   }
 

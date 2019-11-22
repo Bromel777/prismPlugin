@@ -12,19 +12,33 @@ import scala.util.Try
 
 object PrismUtil {
 
-  def findVariableDefinition(project: Project, elem: PrismReferencedIdentifier): Vector[PsiElement] = {
+  def findVariableDefinition(project: Project, elem: PsiElement): Vector[PsiElement] = {
     val virtualFiles = FileTypeIndex.getFiles(PrismFileType.INSTANCE, GlobalSearchScope.allScope(project))
 
-    virtualFiles.asScala.foldLeft(Vector.empty[PsiElement]) { case (acc, virtualFile) =>
-      val file = PsiManager.getInstance(project).findFile(virtualFile)
+    val identOpt = elem match {
+      case pri: PrismReferencedIdentifier =>
+        println(s"var ${pri.getIdentifier.getText}")
+        Some(pri.getIdentifier.getText)
+      case pfd: PrismFunctionDefinition =>
+        println(s"func ${pfd.getIdentifier.getText}")
+        Some(pfd.getIdentifier.getText)
+      case _ => None
+    }
+
+    val a = identOpt.map { ident =>
+      virtualFiles.asScala.foldLeft(Vector.empty[PsiElement]) { case (acc, virtualFile) =>
+        val file = PsiManager.getInstance(project).findFile(virtualFile)
         if (file != null) {
-          val foundGlobal = findVariableDefinitionInGlobalScope(file, elem)
-          println(s"refs for ${elem.getText} from global are ${foundGlobal.map(_.getText).mkString(", ")}")
+          val foundGlobal = findVariableDefinitionInGlobalScope(elem, ident)
           val foundArgs = findVariableInArgs(elem)
-          println(s"refs for ${elem.getText} from args are ${foundArgs.map(_.getText).mkString(", ")}")
           acc ++ foundArgs ++ foundGlobal
         } else acc
-    }
+      }
+    }.getOrElse(Vector.empty[PsiElement])
+
+    println(s"res for $identOpt are ${a.map(_.getText).mkString(", ")}")
+
+    a
   }
 
   def findVariableDefinition(project: Project): Vector[PrismVariableDefinition] = {
@@ -40,7 +54,7 @@ object PrismUtil {
     }
   }
 
-  def findVariableDefinitionInGlobalScope(file: PsiFile, elem: PrismReferencedIdentifier): Vector[PsiElement] = {
+  def findVariableDefinitionInGlobalScope(file: PsiFile, elem: PsiElement): Vector[PsiElement] = {
     val props = PsiTreeUtil.getChildrenOfType(file.getFirstChild, classOf[PrismVariableDefinition])
     if (props != null)
       props
@@ -50,7 +64,28 @@ object PrismUtil {
     else Vector.empty
   }
 
-  def findVariableInArgs(elem: PrismReferencedIdentifier): Vector[PsiElement] = {
+  def findVariableDefinitionInGlobalScope(elem: PsiElement, identifierText: String): Vector[PrismVariableDefinition] = {
+    var parent = elem.getParent
+    val buffer = mutable.Buffer[PrismVariableDefinition]()
+    if (parent == null) {
+      //println(s"666$identifierText")
+      Vector.empty
+    }
+    else {
+      while (parent != null && !parent.isInstanceOf[PsiFile]) {
+        val props: Array[PrismVariableDefinition] = PsiTreeUtil.getChildrenOfType(parent, classOf[PrismVariableDefinition])
+        val found =
+          if (props == null) Array.empty[PrismVariableDefinition]
+          else props.filter(pr => pr.getIdentifier.getText == identifierText && !pr.equals(elem) && pr.getTextRange.getEndOffset < elem.getTextRange.getStartOffset)
+        println(s"found for $identifierText: ${found.map(_.getText).mkString(", ")}")
+        found.foreach(e => buffer.append(e))
+        parent = parent.getParent
+      }
+      buffer.toVector
+    }
+  }
+
+  def findVariableInArgs(elem: PsiElement): Vector[PsiElement] = {
 
     def findInArgs(args: PrismArgsList): Option[PsiElement] =
       if (args == null) None
@@ -86,17 +121,26 @@ object PrismUtil {
     else {
       while (parent != null && !parent.isInstanceOf[PsiFile]) {
         val props: Array[PrismFunctionDefinition] = PsiTreeUtil.getChildrenOfType(parent, classOf[PrismFunctionDefinition])
-        //println("props")
-        //println(s"parent is ${parent.getClass}")
-        //println(props)
-        //if (props != null) println(props.map(_.getClass).mkString(", "))
-        //if (props != null) println(props.map(_.getIdentifier.getText).mkString(", "))
-        //println(parent.getChildren.map(_.getClass).mkString(", "))
-        //println(parent.getChildren.map(_.getText).mkString(", "))
         val found =
           if (props == null) Array.empty[PrismFunctionDefinition]
           else props.filter(_.getIdentifier.getText == elem.getReferencedIdentifier.getIdentifier.getText)
-        //println(s"found: ${found.map(_.getText).mkString(", ")}")
+        found.foreach(e => buffer.append(e))
+        parent = parent.getParent
+      }
+      buffer.toVector
+    }
+  }
+
+  def findFunctionDefinition(elem: PsiElement, identifierText: String): Vector[PrismFunctionDefinition] = {
+    var parent = elem.getParent
+    val buffer = mutable.Buffer[PrismFunctionDefinition]()
+    if (parent == null) Vector.empty
+    else {
+      while (parent != null && !parent.isInstanceOf[PsiFile]) {
+        val props: Array[PrismFunctionDefinition] = PsiTreeUtil.getChildrenOfType(parent, classOf[PrismFunctionDefinition])
+        val found =
+          if (props == null) Array.empty[PrismFunctionDefinition]
+          else props.filter(pr => pr.getIdentifier.getText == identifierText && !pr.equals(elem) && pr.getTextRange.getEndOffset < elem.getTextRange.getStartOffset)
         found.foreach(e => buffer.append(e))
         parent = parent.getParent
       }

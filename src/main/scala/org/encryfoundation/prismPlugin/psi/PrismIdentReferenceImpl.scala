@@ -35,7 +35,7 @@ case class PrismIdentReferenceImpl(element: PrismReferencedIdentifier, range: Te
 //  }
 
   override def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
-    println(s"key $keyOpt")
+    //println(s"key $keyOpt")
     keyOpt match {
       case Some(_) => PsiElementResolveResult.createResults(PrismUtil.findVariableDefinition(myElement.getProject, element): _*)
       case None => Array.empty[ResolveResult]
