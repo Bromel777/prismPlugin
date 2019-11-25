@@ -8,8 +8,6 @@ import org.encryfoundation.prismPlugin.Icons
 case class PrismFunctionCallReferenceImpl(element: PrismFuncCallExpr, range: TextRange)
   extends PrismPsiPolyVariantCachingReferenceBase[PrismFuncCallExpr](element: PrismFuncCallExpr, range: TextRange) {
 
-  //println(element.getReferencedIdentifier.getIdentifier.getText)
-
   override def multiResolve(incompleteCode: Boolean): Array[ResolveResult] =
     PsiElementResolveResult.createResults(
       PrismUtil.findFunctionDefinition(element): _*

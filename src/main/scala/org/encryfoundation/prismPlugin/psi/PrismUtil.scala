@@ -16,16 +16,12 @@ object PrismUtil {
     val virtualFiles = FileTypeIndex.getFiles(PrismFileType.INSTANCE, GlobalSearchScope.allScope(project))
 
     val identOpt = elem match {
-      case pri: PrismReferencedIdentifier =>
-        println(s"var ${pri.getIdentifier.getText}")
-        Some(pri.getIdentifier.getText)
-      case pfd: PrismFunctionDefinition =>
-        println(s"func ${pfd.getIdentifier.getText}")
-        Some(pfd.getIdentifier.getText)
+      case pri: PrismReferencedIdentifier => Some(pri.getIdentifier.getText)
+      case pfd: PrismFunctionDefinition => Some(pfd.getIdentifier.getText)
       case _ => None
     }
 
-    val a = identOpt.map { ident =>
+    identOpt.map { ident =>
       virtualFiles.asScala.foldLeft(Vector.empty[PsiElement]) { case (acc, virtualFile) =>
         val file = PsiManager.getInstance(project).findFile(virtualFile)
         if (file != null) {
@@ -35,10 +31,6 @@ object PrismUtil {
         } else acc
       }
     }.getOrElse(Vector.empty[PsiElement])
-
-    println(s"res for $identOpt are ${a.map(_.getText).mkString(", ")}")
-
-    a
   }
 
   def findVariableDefinition(project: Project): Vector[PrismVariableDefinition] = {
@@ -67,17 +59,13 @@ object PrismUtil {
   def findVariableDefinitionInGlobalScope(elem: PsiElement, identifierText: String): Vector[PrismVariableDefinition] = {
     var parent = elem.getParent
     val buffer = mutable.Buffer[PrismVariableDefinition]()
-    if (parent == null) {
-      //println(s"666$identifierText")
-      Vector.empty
-    }
+    if (parent == null) Vector.empty
     else {
       while (parent != null && !parent.isInstanceOf[PsiFile]) {
         val props: Array[PrismVariableDefinition] = PsiTreeUtil.getChildrenOfType(parent, classOf[PrismVariableDefinition])
         val found =
           if (props == null) Array.empty[PrismVariableDefinition]
           else props.filter(pr => pr.getIdentifier.getText == identifierText && !pr.equals(elem) && pr.getTextRange.getEndOffset < elem.getTextRange.getStartOffset)
-        println(s"found for $identifierText: ${found.map(_.getText).mkString(", ")}")
         found.foreach(e => buffer.append(e))
         parent = parent.getParent
       }
@@ -87,6 +75,7 @@ object PrismUtil {
 
   def findVariableInArgs(elem: PsiElement): Vector[PsiElement] = {
 
+    @scala.annotation.tailrec
     def findInArgs(args: PrismArgsList): Option[PsiElement] =
       if (args == null) None
       else if (Try(args.getIdentifier.getText).toOption.contains(elem.getText)) Some(args.getIdentifier)

@@ -20,8 +20,10 @@ class PrismAnnotator extends Annotator {
         val sameNameAndArgumentsFunctionsExist = PrismUtil.findFunctionDefinition(pfd, pfd.getIdentifier.getText).exists { d =>
           (pfd.getArgsList == null && d.getArgsList == null) || Try(argList == unfoldArgList(d)).getOrElse(false)
         }
+        val typeAnnotationPresent = Option(pfd.getType).isDefined
         val sameNameVariablesExist = if (argList.nonEmpty) false else PrismUtil.findVariableDefinition(pfd.getProject, pfd).nonEmpty
-        if (sameNameAndArgumentsFunctionsExist) holder.createErrorAnnotation(element.getTextRange, s"Function ${pfd.getIdentifier.getText} is already defined in a scope")
+        if (!typeAnnotationPresent) holder.createErrorAnnotation(element.getTextRange, s"Type annotation required")
+        else if (sameNameAndArgumentsFunctionsExist) holder.createErrorAnnotation(element.getTextRange, s"Function ${pfd.getIdentifier.getText} is already defined in a scope")
         else if (sameNameVariablesExist) holder.createErrorAnnotation(element.getTextRange, s"Variable with the same name is already defined in a scope")
       case pri: PrismReferencedIdentifier =>
         if (pri.getParent != null) {

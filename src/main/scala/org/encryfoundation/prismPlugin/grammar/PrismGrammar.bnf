@@ -1,5 +1,6 @@
 {
   parserClass="org.encryfoundation.prismPlugin.GeneratedParser"
+  parserUtilClass="org.encryfoundation.prismPlugin.GeneratedParserUtil"
 
   implements = "org.encryfoundation.prismPlugin.psi.PrismCompositeElement"
   extends="org.encryfoundation.prismPlugin.psi.PrismCompositeElementImpl"
@@ -175,9 +176,6 @@ ArgsList ::= argIdentifier (COLON Type)? (',' ArgsList)?
     | IfLetExpr
     | STMT
 
-    //Expr ::= ExprWODeclr | VariableDefinition
-
-    //Declr ::= VariableDefinition | FunctionDefinition | LambExpr
 
 //Contract
 
