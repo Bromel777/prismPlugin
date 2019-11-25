@@ -11,10 +11,10 @@ public interface PrismRightArithExpr extends PrismCompositeElement {
   PrismMathOp getMathOp();
 
   @Nullable
-  PrismRightArithExpr getRightArithExpr();
+  PrismReferencedIdentifier getReferencedIdentifier();
 
   @Nullable
-  PsiElement getIdentifier();
+  PrismRightArithExpr getRightArithExpr();
 
   @Nullable
   PsiElement getNumber();

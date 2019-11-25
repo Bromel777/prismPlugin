@@ -5,18 +5,26 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface PrismFunctionDefinition extends PrismCompositeElement {
+public interface PrismFunctionDefinition extends PrismNamedElement {
 
   @Nullable
   PrismArgsList getArgsList();
 
   @NotNull
-  PrismExpr getExpr();
+  List<PrismExpr> getExprList();
+
+  @NotNull
+  List<PrismFunctionDefinition> getFunctionDefinitionList();
 
   @Nullable
   PrismType getType();
 
   @NotNull
+  List<PrismVariableDefinition> getVariableDefinitionList();
+
+  @NotNull
   PsiElement getIdentifier();
+
+  PsiElement getNameIdentifier();
 
 }

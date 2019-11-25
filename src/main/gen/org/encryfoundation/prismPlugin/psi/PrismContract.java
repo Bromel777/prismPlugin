@@ -13,4 +13,10 @@ public interface PrismContract extends PrismCompositeElement {
   @NotNull
   List<PrismExpr> getExprList();
 
+  @NotNull
+  List<PrismFunctionDefinition> getFunctionDefinitionList();
+
+  @NotNull
+  List<PrismVariableDefinition> getVariableDefinitionList();
+
 }

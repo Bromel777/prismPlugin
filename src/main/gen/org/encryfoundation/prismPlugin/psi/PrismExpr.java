@@ -8,13 +8,13 @@ import com.intellij.psi.PsiElement;
 public interface PrismExpr extends PrismCompositeElement {
 
   @Nullable
-  PrismAritmExpr getAritmExpr();
+  PrismArithExpr getArithExpr();
 
   @Nullable
   PrismBoolExpr getBoolExpr();
 
   @Nullable
-  PrismFunctionDefinition getFunctionDefinition();
+  PrismFuncCallExpr getFuncCallExpr();
 
   @Nullable
   PrismIfExpr getIfExpr();
@@ -26,6 +26,6 @@ public interface PrismExpr extends PrismCompositeElement {
   PrismLambExpr getLambExpr();
 
   @Nullable
-  PrismVariableDefinition getVariableDefinition();
+  PrismStmt getStmt();
 
 }

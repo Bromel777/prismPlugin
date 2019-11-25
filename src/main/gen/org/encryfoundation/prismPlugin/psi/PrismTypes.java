@@ -8,23 +8,27 @@ import org.encryfoundation.prismPlugin.impl.*;
 
 public interface PrismTypes {
 
+  IElementType AND_TEST = new PrismCompositeElementType("AND_TEST");
   IElementType ARGS_LIST = new PrismCompositeElementType("ARGS_LIST");
-  IElementType ARITM_EXPR = new PrismCompositeElementType("ARITM_EXPR");
+  IElementType ARITH_EXPR = new PrismCompositeElementType("ARITH_EXPR");
   IElementType BASE_16_STR = new PrismCompositeElementType("BASE_16_STR");
   IElementType BASE_58_STR = new PrismCompositeElementType("BASE_58_STR");
   IElementType BOOLEAN_TYPE = new PrismCompositeElementType("BOOLEAN_TYPE");
   IElementType BOOL_EXPR = new PrismCompositeElementType("BOOL_EXPR");
+  IElementType COMPARISON = new PrismCompositeElementType("COMPARISON");
   IElementType COMPR_OP = new PrismCompositeElementType("COMPR_OP");
   IElementType CONTRACT = new PrismCompositeElementType("CONTRACT");
   IElementType EXPR = new PrismCompositeElementType("EXPR");
   IElementType FUNCTION_DEFINITION = new PrismCompositeElementType("FUNCTION_DEFINITION");
   IElementType FUNC_CALL_EXPR = new PrismCompositeElementType("FUNC_CALL_EXPR");
+  IElementType IDENTIFIERS_LIST = new PrismCompositeElementType("IDENTIFIERS_LIST");
   IElementType IF_EXPR = new PrismCompositeElementType("IF_EXPR");
   IElementType IF_LET_EXPR = new PrismCompositeElementType("IF_LET_EXPR");
   IElementType LAMB_EXPR = new PrismCompositeElementType("LAMB_EXPR");
   IElementType MATH_OP = new PrismCompositeElementType("MATH_OP");
+  IElementType NOT_TEST = new PrismCompositeElementType("NOT_TEST");
+  IElementType REFERENCED_IDENTIFIER = new PrismCompositeElementType("REFERENCED_IDENTIFIER");
   IElementType RIGHT_ARITH_EXPR = new PrismCompositeElementType("RIGHT_ARITH_EXPR");
-  IElementType RIGHT_BOOL_EXPR = new PrismCompositeElementType("RIGHT_BOOL_EXPR");
   IElementType STMT = new PrismCompositeElementType("STMT");
   IElementType TYPE = new PrismCompositeElementType("TYPE");
   IElementType VARIABLE_DEFINITION = new PrismCompositeElementType("VARIABLE_DEFINITION");
@@ -60,6 +64,7 @@ public interface PrismTypes {
   IElementType LTE = new PrismTokenType("<=");
   IElementType MOD = new PrismTokenType("%");
   IElementType MULT = new PrismTokenType("*");
+  IElementType NOT = new PrismTokenType("NOT");
   IElementType NOTEQ = new PrismTokenType("<>");
   IElementType NUMBER = new PrismTokenType("NUMBER");
   IElementType OR = new PrismTokenType("||");
@@ -75,11 +80,14 @@ public interface PrismTypes {
   class Factory {
     public static PsiElement createElement(ASTNode node) {
       IElementType type = node.getElementType();
-      if (type == ARGS_LIST) {
+      if (type == AND_TEST) {
+        return new PrismAndTestImpl(node);
+      }
+      else if (type == ARGS_LIST) {
         return new PrismArgsListImpl(node);
       }
-      else if (type == ARITM_EXPR) {
-        return new PrismAritmExprImpl(node);
+      else if (type == ARITH_EXPR) {
+        return new PrismArithExprImpl(node);
       }
       else if (type == BASE_16_STR) {
         return new PrismBase16StrImpl(node);
@@ -92,6 +100,9 @@ public interface PrismTypes {
       }
       else if (type == BOOL_EXPR) {
         return new PrismBoolExprImpl(node);
+      }
+      else if (type == COMPARISON) {
+        return new PrismComparisonImpl(node);
       }
       else if (type == COMPR_OP) {
         return new PrismComprOpImpl(node);
@@ -108,6 +119,9 @@ public interface PrismTypes {
       else if (type == FUNC_CALL_EXPR) {
         return new PrismFuncCallExprImpl(node);
       }
+      else if (type == IDENTIFIERS_LIST) {
+        return new PrismIdentifiersListImpl(node);
+      }
       else if (type == IF_EXPR) {
         return new PrismIfExprImpl(node);
       }
@@ -120,11 +134,14 @@ public interface PrismTypes {
       else if (type == MATH_OP) {
         return new PrismMathOpImpl(node);
       }
+      else if (type == NOT_TEST) {
+        return new PrismNotTestImpl(node);
+      }
+      else if (type == REFERENCED_IDENTIFIER) {
+        return new PrismReferencedIdentifierImpl(node);
+      }
       else if (type == RIGHT_ARITH_EXPR) {
         return new PrismRightArithExprImpl(node);
-      }
-      else if (type == RIGHT_BOOL_EXPR) {
-        return new PrismRightBoolExprImpl(node);
       }
       else if (type == STMT) {
         return new PrismStmtImpl(node);

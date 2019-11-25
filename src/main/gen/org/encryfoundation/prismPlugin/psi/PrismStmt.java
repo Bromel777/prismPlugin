@@ -17,7 +17,7 @@ public interface PrismStmt extends PrismCompositeElement {
   PrismBooleanType getBooleanType();
 
   @Nullable
-  PsiElement getIdentifier();
+  PrismReferencedIdentifier getReferencedIdentifier();
 
   @Nullable
   PsiElement getNumber();

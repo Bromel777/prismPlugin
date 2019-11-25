@@ -6,11 +6,15 @@ import com.intellij.psi.PsiElementVisitor;
 
 public class PrismVisitor extends PsiElementVisitor {
 
+  public void visitAndTest(@NotNull PrismAndTest o) {
+    visitCompositeElement(o);
+  }
+
   public void visitArgsList(@NotNull PrismArgsList o) {
     visitCompositeElement(o);
   }
 
-  public void visitAritmExpr(@NotNull PrismAritmExpr o) {
+  public void visitArithExpr(@NotNull PrismArithExpr o) {
     visitCompositeElement(o);
   }
 
@@ -27,6 +31,10 @@ public class PrismVisitor extends PsiElementVisitor {
   }
 
   public void visitBooleanType(@NotNull PrismBooleanType o) {
+    visitCompositeElement(o);
+  }
+
+  public void visitComparison(@NotNull PrismComparison o) {
     visitCompositeElement(o);
   }
 
@@ -47,7 +55,7 @@ public class PrismVisitor extends PsiElementVisitor {
   }
 
   public void visitFunctionDefinition(@NotNull PrismFunctionDefinition o) {
-    visitCompositeElement(o);
+    visitNamedElement(o);
   }
 
   public void visitIfExpr(@NotNull PrismIfExpr o) {
@@ -66,11 +74,15 @@ public class PrismVisitor extends PsiElementVisitor {
     visitCompositeElement(o);
   }
 
-  public void visitRightArithExpr(@NotNull PrismRightArithExpr o) {
+  public void visitNotTest(@NotNull PrismNotTest o) {
     visitCompositeElement(o);
   }
 
-  public void visitRightBoolExpr(@NotNull PrismRightBoolExpr o) {
+  public void visitReferencedIdentifier(@NotNull PrismReferencedIdentifier o) {
+    visitNamedElement(o);
+  }
+
+  public void visitRightArithExpr(@NotNull PrismRightArithExpr o) {
     visitCompositeElement(o);
   }
 
@@ -84,6 +96,10 @@ public class PrismVisitor extends PsiElementVisitor {
 
   public void visitVariableDefinition(@NotNull PrismVariableDefinition o) {
     visitNamedElement(o);
+  }
+
+  public void visitIdentifiersList(@NotNull PrismIdentifiersList o) {
+    visitCompositeElement(o);
   }
 
   public void visitNamedElement(@NotNull PrismNamedElement o) {

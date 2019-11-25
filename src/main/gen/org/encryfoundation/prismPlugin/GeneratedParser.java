@@ -4,9 +4,8 @@ package org.encryfoundation.prismPlugin;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
-import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
+import static org.encryfoundation.prismPlugin.GeneratedParserUtil.*;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.lang.PsiParser;
@@ -24,27 +23,64 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     boolean r;
     b = adapt_builder_(t, b, this, null);
     Marker m = enter_section_(b, 0, _COLLAPSE_, null);
-    if (t instanceof IFileElementType) {
-      r = parse_root_(t, b, 0);
-    }
-    else {
-      r = false;
-    }
+    r = parse_root_(t, b);
     exit_section_(b, 0, m, t, r, true, TRUE_CONDITION);
   }
 
-  protected boolean parse_root_(IElementType t, PsiBuilder b, int l) {
+  protected boolean parse_root_(IElementType t, PsiBuilder b) {
+    return parse_root_(t, b, 0);
+  }
+
+  static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
     return SimpleFile(b, l + 1);
   }
 
   /* ********************************************************** */
-  // IDENTIFIER (COLON Type)? (',' ArgsList)?
+  // NotTest (AND NotTest)+
+  public static boolean AndTest(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AndTest")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, AND_TEST, "<and test>");
+    r = NotTest(b, l + 1);
+    r = r && AndTest_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (AND NotTest)+
+  private static boolean AndTest_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AndTest_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = AndTest_1_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!AndTest_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "AndTest_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // AND NotTest
+  private static boolean AndTest_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AndTest_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, AND);
+    r = r && NotTest(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // argIdentifier (COLON Type)? (',' ArgsList)?
   public static boolean ArgsList(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArgsList")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
+    r = argIdentifier(b, l + 1);
     r = r && ArgsList_1(b, l + 1);
     r = r && ArgsList_2(b, l + 1);
     exit_section_(b, m, ARGS_LIST, r);
@@ -88,24 +124,24 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (NUMBER | IDENTIFIER) RightArithExpr
-  public static boolean AritmExpr(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "AritmExpr")) return false;
-    if (!nextTokenIs(b, "<aritm expr>", IDENTIFIER, NUMBER)) return false;
+  // (NUMBER | ReferencedIdentifier) RightArithExpr
+  public static boolean ArithExpr(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArithExpr")) return false;
+    if (!nextTokenIs(b, "<arith expr>", IDENTIFIER, NUMBER)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, ARITM_EXPR, "<aritm expr>");
-    r = AritmExpr_0(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, ARITH_EXPR, "<arith expr>");
+    r = ArithExpr_0(b, l + 1);
     r = r && RightArithExpr(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // NUMBER | IDENTIFIER
-  private static boolean AritmExpr_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "AritmExpr_0")) return false;
+  // NUMBER | ReferencedIdentifier
+  private static boolean ArithExpr_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ArithExpr_0")) return false;
     boolean r;
     r = consumeToken(b, NUMBER);
-    if (!r) r = consumeToken(b, IDENTIFIER);
+    if (!r) r = ReferencedIdentifier(b, l + 1);
     return r;
   }
 
@@ -136,33 +172,41 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (BooleanType | FuncCallExpr | IDENTIFIER | STMT) RightBoolExpr?
+  // AndTest (OR AndTest)+
   public static boolean BoolExpr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "BoolExpr")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, BOOL_EXPR, "<bool expr>");
-    r = BoolExpr_0(b, l + 1);
+    r = AndTest(b, l + 1);
     r = r && BoolExpr_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // BooleanType | FuncCallExpr | IDENTIFIER | STMT
-  private static boolean BoolExpr_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "BoolExpr_0")) return false;
+  // (OR AndTest)+
+  private static boolean BoolExpr_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "BoolExpr_1")) return false;
     boolean r;
-    r = BooleanType(b, l + 1);
-    if (!r) r = FuncCallExpr(b, l + 1);
-    if (!r) r = consumeToken(b, IDENTIFIER);
-    if (!r) r = STMT(b, l + 1);
+    Marker m = enter_section_(b);
+    r = BoolExpr_1_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!BoolExpr_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "BoolExpr_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
     return r;
   }
 
-  // RightBoolExpr?
-  private static boolean BoolExpr_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "BoolExpr_1")) return false;
-    RightBoolExpr(b, l + 1);
-    return true;
+  // OR AndTest
+  private static boolean BoolExpr_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "BoolExpr_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, OR);
+    r = r && AndTest(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */
@@ -175,6 +219,45 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, BOOLEAN_TRUE);
     if (!r) r = consumeToken(b, BOOLEAN_FALSE);
     exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // ArithExpr (ComprOp ArithExpr)+
+  public static boolean Comparison(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Comparison")) return false;
+    if (!nextTokenIs(b, "<comparison>", IDENTIFIER, NUMBER)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, COMPARISON, "<comparison>");
+    r = ArithExpr(b, l + 1);
+    r = r && Comparison_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // (ComprOp ArithExpr)+
+  private static boolean Comparison_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Comparison_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = Comparison_1_0(b, l + 1);
+    while (r) {
+      int c = current_position_(b);
+      if (!Comparison_1_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "Comparison_1", c)) break;
+    }
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // ComprOp ArithExpr
+  private static boolean Comparison_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Comparison_1_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ComprOp(b, l + 1);
+    r = r && ArithExpr(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -197,7 +280,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET Expr* RIGHT_CURLY_BRACKET
+  // CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET (Expr | FunctionDefinition | VariableDefinition)* RIGHT_CURLY_BRACKET
   public static boolean Contract(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Contract")) return false;
     if (!nextTokenIs(b, CONTRACT_INIT)) return false;
@@ -219,56 +302,74 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // Expr*
+  // (Expr | FunctionDefinition | VariableDefinition)*
   private static boolean Contract_6(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Contract_6")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!Expr(b, l + 1)) break;
+      if (!Contract_6_0(b, l + 1)) break;
       if (!empty_element_parsed_guard_(b, "Contract_6", c)) break;
     }
     return true;
   }
 
+  // Expr | FunctionDefinition | VariableDefinition
+  private static boolean Contract_6_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Contract_6_0")) return false;
+    boolean r;
+    r = Expr(b, l + 1);
+    if (!r) r = FunctionDefinition(b, l + 1);
+    if (!r) r = VariableDefinition(b, l + 1);
+    return r;
+  }
+
   /* ********************************************************** */
-  // AritmExpr
+  // ArithExpr
   //     | BoolExpr
   //     | LambExpr
-  //     | FunctionDefinition
-  //     | VariableDefinition
+  //     | FuncCallExpr
   //     | IfExpr
   //     | IfLetExpr
+  //     | STMT
   public static boolean Expr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Expr")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, EXPR, "<expr>");
-    r = AritmExpr(b, l + 1);
+    r = ArithExpr(b, l + 1);
     if (!r) r = BoolExpr(b, l + 1);
     if (!r) r = LambExpr(b, l + 1);
-    if (!r) r = FunctionDefinition(b, l + 1);
-    if (!r) r = VariableDefinition(b, l + 1);
+    if (!r) r = FuncCallExpr(b, l + 1);
     if (!r) r = IfExpr(b, l + 1);
     if (!r) r = IfLetExpr(b, l + 1);
+    if (!r) r = STMT(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // IDENTIFIER LEFT_ROUND_BRACKET identifiers_list RIGHT_ROUND_BRACKET
+  // ReferencedIdentifier LEFT_ROUND_BRACKET identifiers_list?  RIGHT_ROUND_BRACKET
   public static boolean FuncCallExpr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FuncCallExpr")) return false;
     if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, IDENTIFIER, LEFT_ROUND_BRACKET);
-    r = r && identifiers_list(b, l + 1);
+    r = ReferencedIdentifier(b, l + 1);
+    r = r && consumeToken(b, LEFT_ROUND_BRACKET);
+    r = r && FuncCallExpr_2(b, l + 1);
     r = r && consumeToken(b, RIGHT_ROUND_BRACKET);
     exit_section_(b, m, FUNC_CALL_EXPR, r);
     return r;
   }
 
+  // identifiers_list?
+  private static boolean FuncCallExpr_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FuncCallExpr_2")) return false;
+    identifiers_list(b, l + 1);
+    return true;
+  }
+
   /* ********************************************************** */
-  // def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (COLON Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+  // def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (COLON Type)? EQU LEFT_CURLY_BRACKET (Expr | FunctionDefinition | VariableDefinition)* RIGHT_CURLY_BRACKET
   public static boolean FunctionDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "FunctionDefinition")) return false;
     if (!nextTokenIs(b, DEF)) return false;
@@ -279,7 +380,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     r = r && consumeToken(b, RIGHT_ROUND_BRACKET);
     r = r && FunctionDefinition_5(b, l + 1);
     r = r && consumeTokens(b, 0, EQU, LEFT_CURLY_BRACKET);
-    r = r && Expr(b, l + 1);
+    r = r && FunctionDefinition_8(b, l + 1);
     r = r && consumeToken(b, RIGHT_CURLY_BRACKET);
     exit_section_(b, m, FUNCTION_DEFINITION, r);
     return r;
@@ -307,6 +408,27 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, COLON);
     r = r && Type(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // (Expr | FunctionDefinition | VariableDefinition)*
+  private static boolean FunctionDefinition_8(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionDefinition_8")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!FunctionDefinition_8_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "FunctionDefinition_8", c)) break;
+    }
+    return true;
+  }
+
+  // Expr | FunctionDefinition | VariableDefinition
+  private static boolean FunctionDefinition_8_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "FunctionDefinition_8_0")) return false;
+    boolean r;
+    r = Expr(b, l + 1);
+    if (!r) r = FunctionDefinition(b, l + 1);
+    if (!r) r = VariableDefinition(b, l + 1);
     return r;
   }
 
@@ -408,7 +530,42 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // MathOp (NUMBER | IDENTIFIER) (RightArithExpr)?
+  // (NOT NotTest) | Comparison
+  public static boolean NotTest(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NotTest")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, NOT_TEST, "<not test>");
+    r = NotTest_0(b, l + 1);
+    if (!r) r = Comparison(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // NOT NotTest
+  private static boolean NotTest_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "NotTest_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, NOT);
+    r = r && NotTest(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // IDENTIFIER
+  public static boolean ReferencedIdentifier(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ReferencedIdentifier")) return false;
+    if (!nextTokenIs(b, IDENTIFIER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, IDENTIFIER);
+    exit_section_(b, m, REFERENCED_IDENTIFIER, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // MathOp (NUMBER | ReferencedIdentifier) (RightArithExpr)?
   public static boolean RightArithExpr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RightArithExpr")) return false;
     boolean r;
@@ -420,12 +577,12 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // NUMBER | IDENTIFIER
+  // NUMBER | ReferencedIdentifier
   private static boolean RightArithExpr_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "RightArithExpr_1")) return false;
     boolean r;
     r = consumeToken(b, NUMBER);
-    if (!r) r = consumeToken(b, IDENTIFIER);
+    if (!r) r = ReferencedIdentifier(b, l + 1);
     return r;
   }
 
@@ -447,48 +604,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ComprOp (BooleanType | FuncCallExpr| IDENTIFIER | STMT) (RightBoolExpr)?
-  public static boolean RightBoolExpr(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "RightBoolExpr")) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, RIGHT_BOOL_EXPR, "<right bool expr>");
-    r = ComprOp(b, l + 1);
-    r = r && RightBoolExpr_1(b, l + 1);
-    r = r && RightBoolExpr_2(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // BooleanType | FuncCallExpr| IDENTIFIER | STMT
-  private static boolean RightBoolExpr_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "RightBoolExpr_1")) return false;
-    boolean r;
-    r = BooleanType(b, l + 1);
-    if (!r) r = FuncCallExpr(b, l + 1);
-    if (!r) r = consumeToken(b, IDENTIFIER);
-    if (!r) r = STMT(b, l + 1);
-    return r;
-  }
-
-  // (RightBoolExpr)?
-  private static boolean RightBoolExpr_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "RightBoolExpr_2")) return false;
-    RightBoolExpr_2_0(b, l + 1);
-    return true;
-  }
-
-  // (RightBoolExpr)
-  private static boolean RightBoolExpr_2_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "RightBoolExpr_2_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = RightBoolExpr(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  /* ********************************************************** */
-  // BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | IDENTIFIER
+  // BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | ReferencedIdentifier
   public static boolean STMT(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "STMT")) return false;
     boolean r;
@@ -498,7 +614,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, NUMBER);
     if (!r) r = consumeToken(b, STRING);
     if (!r) r = BooleanType(b, l + 1);
-    if (!r) r = consumeToken(b, IDENTIFIER);
+    if (!r) r = ReferencedIdentifier(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -526,7 +642,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LET IDENTIFIER (COLON Type)? EQU (FuncCallExpr | STMT)
+  // LET IDENTIFIER (COLON Type)? EQU Expr
   public static boolean VariableDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "VariableDefinition")) return false;
     if (!nextTokenIs(b, LET)) return false;
@@ -535,7 +651,7 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     r = consumeTokens(b, 0, LET, IDENTIFIER);
     r = r && VariableDefinition_2(b, l + 1);
     r = r && consumeToken(b, EQU);
-    r = r && VariableDefinition_4(b, l + 1);
+    r = r && Expr(b, l + 1);
     exit_section_(b, m, VARIABLE_DEFINITION, r);
     return r;
   }
@@ -558,13 +674,10 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // FuncCallExpr | STMT
-  private static boolean VariableDefinition_4(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "VariableDefinition_4")) return false;
-    boolean r;
-    r = FuncCallExpr(b, l + 1);
-    if (!r) r = STMT(b, l + 1);
-    return r;
+  /* ********************************************************** */
+  // IDENTIFIER
+  static boolean argIdentifier(PsiBuilder b, int l) {
+    return consumeToken(b, IDENTIFIER);
   }
 
   /* ********************************************************** */
@@ -580,15 +693,14 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IDENTIFIER ("," identifiers_list)?
-  static boolean identifiers_list(PsiBuilder b, int l) {
+  // STMT ("," identifiers_list)?
+  public static boolean identifiers_list(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "identifiers_list")) return false;
-    if (!nextTokenIs(b, IDENTIFIER)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, IDENTIFIER);
+    Marker m = enter_section_(b, l, _NONE_, IDENTIFIERS_LIST, "<identifiers list>");
+    r = STMT(b, l + 1);
     r = r && identifiers_list_1(b, l + 1);
-    exit_section_(b, m, null, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
