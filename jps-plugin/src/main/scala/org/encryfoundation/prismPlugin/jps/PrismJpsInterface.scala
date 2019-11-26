@@ -3,8 +3,7 @@ package org.encryfoundation.prismPlugin.jps
 import java.io.File
 
 import com.intellij.execution.configurations.GeneralCommandLine
-import com.intellij.openapi.application.ex.PathManagerEx
-import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.openapi.roots.libraries.{Library, LibraryTable, LibraryTablesRegistrar}
 import org.encryfoundation.prismPlugin.model.JpsPrismSdkType
 import org.jetbrains.jps.incremental.CompileContext
 import org.jetbrains.jps.model.module.JpsModule
@@ -40,21 +39,23 @@ object PrismJpsInterface {
       .getProjectJavaSdks
       .asScala
       .foreach(sdk => println(s"Sdk: ${sdk.getHomePath}"))
-    println("libs:" + module.getLibraryCollection)
+    println("libs:" + module.getProject
+      .getLibraryCollection
+      .getLibraries.asScala.map(_.getName).mkString(", "))
     val rootDir = new File(moduleRoot)
     val compilerPath = module.getProject
       .getLibraryCollection
       .getLibraries
-      .asScala.filter { lib =>
-        println(s"libName: ${lib.createReference().getLibraryName}")
-        lib.createReference().getLibraryName == "Prism"
-      }
+      .asScala
       .flatMap { lib =>
+        println(s"filtered: ${lib.getName}")
         lib.getFiles(JpsOrderRootType.COMPILED).asScala
       }
       .head
+    println(s"compilerPath: ${compilerPath.getAbsolutePath}")
     val sdk = module.getSdk(JpsPrismSdkType.instance)
     println(s"sdk: ${sdk}")
     new PrismJpsInterface(rootDir, compilerPath)
   }
+
 }
