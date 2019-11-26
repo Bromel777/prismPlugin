@@ -12,13 +12,13 @@ class PrismAnnotator extends Annotator {
     element match {
       case pvd: PrismVariableDefinition =>
         val sameNameVariablesExist = PrismUtil.findVariableDefinition(element.getProject, pvd.getIdentifier).nonEmpty
-        val sameNameFunctionExist = PrismUtil.findFunctionDefinition(pvd, pvd.getIdentifier.getText).exists(f => unfoldArgList(f).isEmpty)
+        val sameNameFunctionExist = PrismUtil.findFunctionDefinition(pvd, pvd.getIdentifier.getText).exists(f => unfoldArgTypes(f).isEmpty)
         if (sameNameVariablesExist) holder.createErrorAnnotation(element.getTextRange, s"Variable ${pvd.getIdentifier.getText} is already defined in a scope")
         else if (sameNameFunctionExist) holder.createErrorAnnotation(element.getTextRange, s"Function without arguments with the same name is already defined in a scope")
       case pfd: PrismFunctionDefinition =>
-        val argList = unfoldArgList(pfd)
+        val argList = unfoldArgTypes(pfd)
         val sameNameAndArgumentsFunctionsExist = PrismUtil.findFunctionDefinition(pfd, pfd.getIdentifier.getText).exists { d =>
-          (pfd.getArgsList == null && d.getArgsList == null) || Try(argList == unfoldArgList(d)).getOrElse(false)
+          (pfd.getArgsList == null && d.getArgsList == null) || Try(argList == unfoldArgTypes(d)).getOrElse(false)
         }
         val typeAnnotationPresent = Option(pfd.getType).isDefined
         val sameNameVariablesExist = if (argList.nonEmpty) false else PrismUtil.findVariableDefinition(pfd.getProject, pfd).nonEmpty
@@ -30,7 +30,7 @@ class PrismAnnotator extends Annotator {
           pri.getParent match {
             case pfc: PrismFuncCallExpr =>
               if (!PrismUtil.findFunctionDefinition(pri, pri.getIdentifier.getText).exists { f =>
-                  unfoldArgList(Vector.empty, f.getArgsList).length == unfoldIdentifierList(pfc).size
+                unfoldArgTypes(Vector.empty, f.getArgsList).length == unfoldIdentifierList(pfc).size
               }) holder.createErrorAnnotation(element.getTextRange, s"Function definition not found")
             case _ =>
               if (PrismUtil.findVariableDefinition(pri.getProject, pri).isEmpty)
@@ -41,20 +41,20 @@ class PrismAnnotator extends Annotator {
     }
   }
 
-  private def unfoldArgList(f: PrismFunctionDefinition): String = unfoldArgList(Vector.empty, f.getArgsList).mkString(", ")
+  private def unfoldArgTypes(f: PrismFunctionDefinition): String = unfoldArgTypes(Vector.empty, f.getArgsList).mkString(", ")
 
-  private def unfoldArgList(prevArgs: Vector[String], args: PrismArgsList): Vector[String] =
+  private def unfoldArgTypes(prevArgs: Vector[String], args: PrismArgsList): Vector[String] =
     if (args == null) prevArgs
     else {
       val currentArgs: Vector[String] = Try {
         prevArgs :+ args.getType.getText
       }.getOrElse(prevArgs)
-      unfoldArgList(currentArgs, args.getArgsList)
+      unfoldArgTypes(currentArgs, args.getArgsList)
     }
 
   private def unfoldIdentifierList(funcCall: PrismFuncCallExpr): Vector[String] = unfoldIdentifierList(Vector.empty, funcCall.getIdentifiersList)
 
   private def unfoldIdentifierList(prevIdents: Vector[String], identifiers: PrismIdentifiersList): Vector[String] =
     if (identifiers == null) prevIdents
-    else unfoldIdentifierList(prevIdents :+ identifiers.getStmt.getText, identifiers.getIdentifiersList)
+    else unfoldIdentifierList(prevIdents :+ identifiers.getText, identifiers.getIdentifiersList)
 }

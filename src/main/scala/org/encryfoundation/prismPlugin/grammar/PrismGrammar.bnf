@@ -163,7 +163,7 @@ ArgsList ::= argIdentifier (COLON Type)? (',' ArgsList)?
         methods = [getReference getFuncIdentifier]
     }
 
-    identifiers_list ::= STMT ("," identifiers_list)?
+    identifiers_list ::= Expr ("," identifiers_list)?
 
 // global expr
 
