@@ -48,7 +48,7 @@
         BOOL_TYPE = 'Bool'
         INT_TYPE = 'Int'
         BYTE_TYPE = 'Byte'
-        STRING_TYPE = 'Sting'
+        STRING_TYPE = 'String'
 
 
         LEFT_CURLY_BRACKET = '{'
@@ -149,8 +149,8 @@ ArgsList ::= argIdentifier (COLON Type)? (',' ArgsList)?
 
 // if expr
 
-    IfExpr ::= IF LEFT_ROUND_BRACKET BoolExpr RIGHT_ROUND_BRACKET LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
-               ELSE LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
+    IfExpr ::= IF LEFT_ROUND_BRACKET BoolExpr RIGHT_ROUND_BRACKET LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+               ELSE LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
 
 // if let expr
 

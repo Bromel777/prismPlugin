@@ -2,7 +2,7 @@ package org.encryfoundation.prismPlugin.editor
 
 import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
-import org.encryfoundation.prismPlugin.psi.{PrismArgsList, PrismFuncCallExpr, PrismFunctionCallReferenceImpl, PrismFunctionDefinition, PrismIdentifiersList, PrismReferencedIdentifier, PrismUtil, PrismVariableDefinition}
+import org.encryfoundation.prismPlugin.psi.{PrismArgsList, PrismFuncCallExpr, PrismFunctionCallReferenceImpl, PrismFunctionDefinition, PrismIdentifiersList, PrismReferencedIdentifier, PrismTypeInferenceUtil, PrismUtil, PrismVariableDefinition}
 
 import scala.util.Try
 
@@ -13,7 +13,10 @@ class PrismAnnotator extends Annotator {
       case pvd: PrismVariableDefinition =>
         val sameNameVariablesExist = PrismUtil.findVariableDefinition(element.getProject, pvd.getIdentifier).nonEmpty
         val sameNameFunctionExist = PrismUtil.findFunctionDefinition(pvd, pvd.getIdentifier.getText).exists(f => unfoldArgTypes(f).isEmpty)
-        if (sameNameVariablesExist) holder.createErrorAnnotation(element.getTextRange, s"Variable ${pvd.getIdentifier.getText} is already defined in a scope")
+        val (typeCorresponds, inferredOpt, declaredOpt) = PrismTypeInferenceUtil.inferredTypeCorrespondsToDeclaredType(pvd)
+
+        if (!typeCorresponds) holder.createErrorAnnotation(element.getTextRange, s"Variable declared type ${declaredOpt.getOrElse("")} does not correspond to inferred type ${inferredOpt.getOrElse("")}")
+        else if (sameNameVariablesExist) holder.createErrorAnnotation(element.getTextRange, s"Variable ${pvd.getIdentifier.getText} is already defined in a scope")
         else if (sameNameFunctionExist) holder.createErrorAnnotation(element.getTextRange, s"Function without arguments with the same name is already defined in a scope")
       case pfd: PrismFunctionDefinition =>
         val argList = unfoldArgTypes(pfd)
@@ -22,6 +25,7 @@ class PrismAnnotator extends Annotator {
         }
         val typeAnnotationPresent = Option(pfd.getType).isDefined
         val sameNameVariablesExist = if (argList.nonEmpty) false else PrismUtil.findVariableDefinition(pfd.getProject, pfd).nonEmpty
+
         if (!typeAnnotationPresent) holder.createErrorAnnotation(element.getTextRange, s"Type annotation required")
         else if (sameNameAndArgumentsFunctionsExist) holder.createErrorAnnotation(element.getTextRange, s"Function ${pfd.getIdentifier.getText} is already defined in a scope")
         else if (sameNameVariablesExist) holder.createErrorAnnotation(element.getTextRange, s"Variable with the same name is already defined in a scope")

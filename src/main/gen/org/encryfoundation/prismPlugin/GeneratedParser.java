@@ -4,8 +4,9 @@ package org.encryfoundation.prismPlugin;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiBuilder.Marker;
 import static org.encryfoundation.prismPlugin.psi.PrismTypes.*;
-import static org.encryfoundation.prismPlugin.GeneratedParserUtil.*;
+import static com.intellij.lang.parser.GeneratedParserUtilBase.*;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.IFileElementType;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.lang.PsiParser;
@@ -23,15 +24,16 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     boolean r;
     b = adapt_builder_(t, b, this, null);
     Marker m = enter_section_(b, 0, _COLLAPSE_, null);
-    r = parse_root_(t, b);
+    if (t instanceof IFileElementType) {
+      r = parse_root_(t, b, 0);
+    }
+    else {
+      r = false;
+    }
     exit_section_(b, 0, m, t, r, true, TRUE_CONDITION);
   }
 
-  protected boolean parse_root_(IElementType t, PsiBuilder b) {
-    return parse_root_(t, b, 0);
-  }
-
-  static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
+  protected boolean parse_root_(IElementType t, PsiBuilder b, int l) {
     return SimpleFile(b, l + 1);
   }
 
@@ -433,8 +435,8 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // IF LEFT_ROUND_BRACKET BoolExpr RIGHT_ROUND_BRACKET LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
-  //                ELSE LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
+  // IF LEFT_ROUND_BRACKET BoolExpr RIGHT_ROUND_BRACKET LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+  //                ELSE LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
   public static boolean IfExpr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "IfExpr")) return false;
     if (!nextTokenIs(b, IF)) return false;
@@ -443,26 +445,12 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
     r = consumeTokens(b, 0, IF, LEFT_ROUND_BRACKET);
     r = r && BoolExpr(b, l + 1);
     r = r && consumeTokens(b, 0, RIGHT_ROUND_BRACKET, LEFT_CURLY_BRACKET);
-    r = r && IfExpr_5(b, l + 1);
+    r = r && Expr(b, l + 1);
     r = r && consumeTokens(b, 0, RIGHT_CURLY_BRACKET, ELSE, LEFT_CURLY_BRACKET);
-    r = r && IfExpr_9(b, l + 1);
+    r = r && Expr(b, l + 1);
     r = r && consumeToken(b, RIGHT_CURLY_BRACKET);
     exit_section_(b, m, IF_EXPR, r);
     return r;
-  }
-
-  // Expr?
-  private static boolean IfExpr_5(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "IfExpr_5")) return false;
-    Expr(b, l + 1);
-    return true;
-  }
-
-  // Expr?
-  private static boolean IfExpr_9(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "IfExpr_9")) return false;
-    Expr(b, l + 1);
-    return true;
   }
 
   /* ********************************************************** */
@@ -693,12 +681,12 @@ public class GeneratedParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // STMT ("," identifiers_list)?
+  // Expr ("," identifiers_list)?
   public static boolean identifiers_list(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "identifiers_list")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, IDENTIFIERS_LIST, "<identifiers list>");
-    r = STMT(b, l + 1);
+    r = Expr(b, l + 1);
     r = r && identifiers_list_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;

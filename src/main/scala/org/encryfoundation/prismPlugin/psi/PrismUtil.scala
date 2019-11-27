@@ -26,7 +26,7 @@ object PrismUtil {
         val file = PsiManager.getInstance(project).findFile(virtualFile)
         if (file != null) {
           val foundGlobal = findVariableDefinitionInGlobalScope(elem, ident)
-          val foundArgs = findVariableInArgs(elem)
+          val foundArgs = findVariableInArgs(elem).map(_._1)
           acc ++ foundArgs ++ foundGlobal
         } else acc
       }
@@ -73,20 +73,20 @@ object PrismUtil {
     }
   }
 
-  def findVariableInArgs(elem: PsiElement): Vector[PsiElement] = {
+  def findVariableInArgs(elem: PsiElement): Vector[(PsiElement, Option[PrismType])] = {
 
     @scala.annotation.tailrec
-    def findInArgs(args: PrismArgsList): Option[PsiElement] =
-      if (args == null) None
-      else if (Try(args.getIdentifier.getText).toOption.contains(elem.getText)) Some(args.getIdentifier)
+    def findInArgs(args: PrismArgsList): (Option[PsiElement], Option[PrismType]) =
+      if (args == null) (None, None)
+      else if (Try(args.getIdentifier.getText).toOption.contains(elem.getText)) (Some(args.getIdentifier), Option(args.getType))
       else {
         val next = args.getArgsList
         if (next != null) findInArgs(next)
-        else None
+        else (None, None)
       }
 
     var parent = elem.getParent
-    val buffer = mutable.Buffer[PsiElement]()
+    val buffer = mutable.Buffer[(PsiElement, Option[PrismType])]()
     if (parent == null || parent.isInstanceOf[PrismContract]) Vector.empty
     else {
       while (parent != null && !parent.isInstanceOf[PsiFile]) {
@@ -94,9 +94,14 @@ object PrismUtil {
           case pfd: PrismFunctionDefinition => findInArgs(pfd.getArgsList)
           case lamb: PrismLambExpr => findInArgs(lamb.getArgsList)
           case cont: PrismContract => findInArgs(cont.getArgsList)
-          case _ => None
+          case _ => (None, None)
         }
-        found.foreach(e => buffer.append(e))
+
+        found match {
+          case (Some(e), tp) => buffer.append((e, tp))
+          case _             =>
+        }
+
         parent = parent.getParent
       }
       buffer.toVector
