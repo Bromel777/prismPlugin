@@ -27,6 +27,7 @@
         <createFromTemplateHandler implementation="org.encryfoundation.prismPlugin.actions.PrismCreateFromTemplateHandler" order="first"/>
         <compileServer.plugin classpath ="scala-library-2.12.2.jar;jps-plugin.jar" />
         <annotator language="Prism" implementationClass="org.encryfoundation.prismPlugin.editor.PrismAnnotator"/>
+        <documentationProvider language="Prism" implementation="org.encryfoundation.prismPlugin.editor.PrismDocumentationProvider"/>
         <colorSettingsPage implementation="org.encryfoundation.prismPlugin.editor.PrismColorSettingPage"/>
         <internalFileTemplate name="Prism Contract"/>
     </extensions>

@@ -3,7 +3,7 @@ package org.encryfoundation.prismPlugin.psi
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.navigation.ItemPresentation
-import com.intellij.psi.{PsiElement, ResolveState}
+import com.intellij.psi.{PsiElement, PsiReference, ResolveState}
 import com.intellij.psi.scope.PsiScopeProcessor
 import com.intellij.usageView.UsageViewUtil
 import javax.swing.Icon
@@ -20,4 +20,10 @@ class PrismCompositeElementImpl(node: ASTNode) extends ASTWrapperPsiElement(node
       override def getIcon(unused: Boolean): Icon = PrismCompositeElementImpl.this.getIcon(0)
     }
   }
+
+  override def getReference: PsiReference = super.getReference
+
+  override def processDeclarations(processor: PsiScopeProcessor, state: ResolveState, lastParent: PsiElement, place: PsiElement): Boolean =
+    processor.execute(this, state) && ResolveUtil.processChildren(this, processor, state, lastParent, place)
+
 }

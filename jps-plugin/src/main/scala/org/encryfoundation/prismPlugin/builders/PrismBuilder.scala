@@ -67,6 +67,7 @@ class PrismBuilder() extends
       .head
     println(fileToCompile.getAbsoluteFile)
     commandLine.addParameter(fileToCompile.getAbsolutePath)
+    commandLine.addParameter(outputDirectory.getAbsolutePath)
     val process: ProcessListener = PrismCProcessListener(compileContext, "prismc", "")
     System.out.println("proccess" + ":" + process)
     println(s"command: ${commandLine.getCommandLineString}")

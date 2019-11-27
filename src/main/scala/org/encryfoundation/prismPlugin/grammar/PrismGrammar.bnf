@@ -48,7 +48,7 @@
         BOOL_TYPE = 'Bool'
         INT_TYPE = 'Int'
         BYTE_TYPE = 'Byte'
-        STRING_TYPE = 'Sting'
+        STRING_TYPE = 'String'
 
 
         LEFT_CURLY_BRACKET = '{'
@@ -80,8 +80,8 @@
         WHITE_SPACE = 'regexp:\s+'
     ]
 
-    implements("VariableDefinition")="org.encryfoundation.prismPlugin.psi.PrismNamedElement"
-    extends("VariableDefinition")="org.encryfoundation.prismPlugin.psi.PrismNamedElementImpl"
+    implements("VariableDefinition|FunctionDefinition|ReferencedIdentifier")="org.encryfoundation.prismPlugin.psi.PrismNamedElement"
+    extends("VariableDefinition|FunctionDefinition|ReferencedIdentifier")="org.encryfoundation.prismPlugin.psi.PrismNamedElementImpl"
 }
 
 
@@ -101,32 +101,47 @@ private base58init ::= base58
 
 private base16init ::= base16
 
-FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (COLON Type)? EQU LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+FunctionDefinition ::= def IDENTIFIER LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET (COLON Type)? EQU LEFT_CURLY_BRACKET (Expr | FunctionDefinition | VariableDefinition)* RIGHT_CURLY_BRACKET {
+    methods = [getNameIdentifier]
+}
 
-STMT ::= BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | IDENTIFIER
+ReferencedIdentifier ::= IDENTIFIER {
+    methods = [getReference getNameIdentifier]
+}
 
-VariableDefinition ::= LET IDENTIFIER (COLON Type)? EQU (FuncCallExpr | STMT) {
+STMT ::= BASE58_STR | BASE16_STR | NUMBER | STRING | BooleanType | ReferencedIdentifier
 
-    methods = [getNameIdentifier getReference]
+VariableDefinition ::= LET IDENTIFIER (COLON Type)? EQU Expr {
+    methods = [getNameIdentifier]
 }
 
 Type ::= ANY_TYPE | UNIT_TYPE | BOOL_TYPE | INT_TYPE | BYTE_TYPE | STRING_TYPE // add collections
 
-ArgsList ::= IDENTIFIER (COLON Type)? (',' ArgsList)?
+private argIdentifier ::= IDENTIFIER
+
+ArgsList ::= argIdentifier (COLON Type)? (',' ArgsList)?
 
 //exprs
 
 //arithm
 
-    RightArithExpr ::= MathOp (NUMBER | IDENTIFIER) (RightArithExpr)?
+    RightArithExpr ::= MathOp (NUMBER | ReferencedIdentifier) (RightArithExpr)?
 
-    AritmExpr ::= (NUMBER | IDENTIFIER) RightArithExpr
+    ArithExpr ::= (NUMBER | ReferencedIdentifier) RightArithExpr
 
 //compr
 
-    RightBoolExpr ::= ComprOp (BooleanType | FuncCallExpr| IDENTIFIER | STMT) (RightBoolExpr)?
+    //RightBoolExpr ::= ComprOp (BooleanType | FuncCallExpr| IDENTIFIER | STMT) (RightBoolExpr)?
 
-    BoolExpr ::= (BooleanType | FuncCallExpr | IDENTIFIER | STMT) RightBoolExpr?
+    //BoolExpr ::= (BooleanType | FuncCallExpr | IDENTIFIER | STMT) RightBoolExpr?
+
+    Comparison ::= ArithExpr (ComprOp ArithExpr)+
+
+    NotTest ::= (NOT NotTest) | Comparison
+
+    AndTest ::= NotTest (AND NotTest)+
+
+    BoolExpr ::= AndTest (OR AndTest)+
 
 //lamb def
 
@@ -134,8 +149,8 @@ ArgsList ::= IDENTIFIER (COLON Type)? (',' ArgsList)?
 
 // if expr
 
-    IfExpr ::= IF LEFT_ROUND_BRACKET BoolExpr RIGHT_ROUND_BRACKET LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
-               ELSE LEFT_CURLY_BRACKET Expr? RIGHT_CURLY_BRACKET
+    IfExpr ::= IF LEFT_ROUND_BRACKET BoolExpr RIGHT_ROUND_BRACKET LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
+               ELSE LEFT_CURLY_BRACKET Expr RIGHT_CURLY_BRACKET
 
 // if let expr
 
@@ -144,20 +159,23 @@ ArgsList ::= IDENTIFIER (COLON Type)? (',' ArgsList)?
 
 // func call
 
-    FuncCallExpr ::= IDENTIFIER LEFT_ROUND_BRACKET identifiers_list RIGHT_ROUND_BRACKET
+    FuncCallExpr ::= ReferencedIdentifier LEFT_ROUND_BRACKET identifiers_list?  RIGHT_ROUND_BRACKET {
+        methods = [getReference getFuncIdentifier]
+    }
 
-    private identifiers_list ::= IDENTIFIER ("," identifiers_list)?
+    identifiers_list ::= Expr ("," identifiers_list)?
 
 // global expr
 
-    Expr ::= AritmExpr
+    Expr ::= ArithExpr
     | BoolExpr
     | LambExpr
-    | FunctionDefinition
-    | VariableDefinition
+    | FuncCallExpr
     | IfExpr
     | IfLetExpr
+    | STMT
+
 
 //Contract
 
-    Contract ::= CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET Expr* RIGHT_CURLY_BRACKET
+    Contract ::= CONTRACT_INIT LEFT_ROUND_BRACKET ArgsList? RIGHT_ROUND_BRACKET EQU LEFT_CURLY_BRACKET (Expr | FunctionDefinition | VariableDefinition)* RIGHT_CURLY_BRACKET
